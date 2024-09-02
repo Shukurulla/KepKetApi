@@ -1,0 +1,71 @@
+const express = require('express');
+const router = express.Router();
+
+// Route modullarini import qilish
+const authRoutes = require('./auth.routes');
+const userRoutes = require('./user.routes');
+const dishRoutes = require('./dish.routes');
+const orderRoutes = require('./order.routes');
+const reservationRoutes = require('./reservation.routes');
+const reviewRoutes = require('./review.routes');
+const promotionRoutes = require('./promotion.routes');
+const notificationRoutes = require('./notification.routes');
+const qrRoutes = require('./qr.routes');
+const restaurantRoutes = require('./restaurant.routes');
+
+// Route'larni ro'yxatdan o'tkazish funksiyasi
+const registerRoute = (path, routeModule) => {
+  if (typeof routeModule === 'function' || routeModule instanceof express.Router) {
+    router.use(path, routeModule);
+  } else {
+    console.error(`Invalid route module for path: ${path}`);
+  }
+};
+
+try {
+  // Autentifikatsiya route'lari
+  registerRoute('/auth', authRoutes);
+
+  // Foydalanuvchilar route'lari
+  registerRoute('/users', userRoutes);
+
+  // Taomlar route'lari
+  registerRoute('/dishes', dishRoutes);
+
+  // Buyurtmalar route'lari
+  registerRoute('/orders', orderRoutes);
+
+  // Rezervatsiyalar route'lari
+  registerRoute('/reservations', reservationRoutes);
+
+  // Sharhlar route'lari
+  registerRoute('/reviews', reviewRoutes);
+
+  // Aksiyalar route'lari
+  registerRoute('/promotions', promotionRoutes);
+
+  // Bildirishnomalar route'lari
+  registerRoute('/notifications', notificationRoutes);
+
+  // QR kod route'lari
+  registerRoute('/qr', qrRoutes);
+
+  // Restoran route'lari
+  registerRoute('/restaurants', restaurantRoutes);
+
+} catch (error) {
+  console.error('Error setting up routes:', error);
+}
+
+// 404 xatosi uchun middleware
+router.use((req, res, next) => {
+  res.status(404).json({ message: 'Not Found' });
+});
+
+// Xatolarni qayta ishlash uchun middleware
+router.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Internal Server Error' });
+});
+
+module.exports = router;

@@ -1,0 +1,88 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>KepKetApi</Name>
+    <RootNamespace>KepKetApi</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>bea3f04b-4670-4914-bce1-8ea50ae69f48</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>src\models\user.model.js</StartupFile>
+    <StartWebBrowser>False</StartWebBrowser>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <StartWebBrowser>false</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".env" />
+    <Content Include="server.js" />
+    <Content Include="src\config\database.js" />
+    <Content Include="src\config\swagger.js" />
+    <Content Include="src\config\config.js" />
+    <Content Include="src\controllers\dish.controller.js" />
+    <Content Include="src\controllers\order.controller.js" />
+    <Content Include="src\controllers\notification.controller.js" />
+    <Content Include="src\controllers\promotion.controller.js" />
+    <Content Include="src\controllers\reservation.controller.js" />
+    <Content Include="src\controllers\review.controller.js" />
+    <Content Include="src\controllers\stats.controller.js" />
+    <Content Include="src\controllers\user.controller.js" />
+    <Content Include="src\controllers\auth.controller.js" />
+    <Content Include="src\middlewares\role.middleware.js" />
+    <Content Include="src\middlewares\error.middleware.js" />
+    <Content Include="src\middlewares\auth.middleware.js" />
+    <Content Include="src\models\order.model.js" />
+    <Content Include="src\models\notification.model.js" />
+    <Content Include="src\models\dish.model.js" />
+    <Content Include="src\models\reservation.model.js" />
+    <Content Include="src\models\review.model.js" />
+    <Content Include="src\models\promotion.model.js" />
+    <Content Include="src\models\user.model.js" />
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+    <Content Include="src\routes\dish.routes.js" />
+    <Content Include="src\routes\order.routes.js" />
+    <Content Include="src\routes\notification.routes.js" />
+    <Content Include="src\routes\index.js" />
+    <Content Include="src\routes\promotion.routes.js" />
+    <Content Include="src\routes\reservation.routes.js" />
+    <Content Include="src\routes\review.routes.js" />
+    <Content Include="src\routes\stats.routes.js" />
+    <Content Include="src\routes\user.routes.js" />
+    <Content Include="src\routes\auth.routes.js" />
+    <Content Include="src\services\order.service.js" />
+    <Content Include="src\services\notification.service.js" />
+    <Content Include="src\services\dish.service.js" />
+    <Content Include="src\services\user.service.js" />
+    <Content Include="src\utils\logger.js" />
+    <Content Include="src\utils\helpers.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="tests\" />
+    <Folder Include="src\" />
+    <Folder Include="src\config\" />
+    <Folder Include="src\routes\" />
+    <Folder Include="src\middlewares\" />
+    <Folder Include="src\utils\" />
+    <Folder Include="src\services\" />
+    <Folder Include="src\controllers\" />
+    <Folder Include="src\models\" />
+    <Folder Include="tests\integration\" />
+    <Folder Include="tests\unit\" />
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
+</Project>

@@ -1,0 +1,125 @@
+{"level":"info","message":"Server 3000 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3000 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3000 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3000 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3000 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"error":{"body":"{\n  \"name\": \"string\",\n  \"price\": 0,\n  \"description\": \"string\",\n  \"category\": \"string\"\n   \"image\": \"url usi\"\n}","expose":true,"status":400,"statusCode":400,"type":"entity.parse.failed"},"level":"error","message":"Expected ',' or '}' after property value in JSON at position 89","service":"restaurant-automation"}
+{"level":"info","message":"Server 3000 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3000 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"error","message":"MongoDB ga ulanishda xatolik: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":"atlas-769b36-shard-0","stale":false,"type":"ReplicaSetNoPrimary"},"service":"restaurant-automation","stack":"MongooseServerSelectionError: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/\n    at _handleConnectionErrors (C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\connection.js:816:11)\n    at NativeConnection.openUri (C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\connection.js:791:11)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"_message":"Order validation failed","errors":{"restaurantId":{"kind":"required","message":"Path `restaurantId` is required.","name":"ValidatorError","path":"restaurantId","properties":{"message":"Path `restaurantId` is required.","path":"restaurantId","type":"required"}}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: restaurantId: Path `restaurantId` is required.","service":"restaurant-automation","stack":"ValidationError: Order validation failed: restaurantId: Path `restaurantId` is required.\n    at Document.invalidate (C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3012:17\n    at C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1368:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"_message":"Order validation failed","errors":{"restaurantId":{"kind":"required","message":"Path `restaurantId` is required.","name":"ValidatorError","path":"restaurantId","properties":{"message":"Path `restaurantId` is required.","path":"restaurantId","type":"required"}}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: restaurantId: Path `restaurantId` is required.","service":"restaurant-automation","stack":"ValidationError: Order validation failed: restaurantId: Path `restaurantId` is required.\n    at Document.invalidate (C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3012:17\n    at C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1368:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}
+{"_message":"Order validation failed","errors":{"restaurantId":{"kind":"required","message":"Path `restaurantId` is required.","name":"ValidatorError","path":"restaurantId","properties":{"message":"Path `restaurantId` is required.","path":"restaurantId","type":"required"}}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: restaurantId: Path `restaurantId` is required.","service":"restaurant-automation","stack":"ValidationError: Order validation failed: restaurantId: Path `restaurantId` is required.\n    at Document.invalidate (C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3012:17\n    at C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1368:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"_message":"Order validation failed","errors":{"restaurantId":{"kind":"required","message":"Path `restaurantId` is required.","name":"ValidatorError","path":"restaurantId","properties":{"message":"Path `restaurantId` is required.","path":"restaurantId","type":"required"}}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: restaurantId: Path `restaurantId` is required.","service":"restaurant-automation","stack":"ValidationError: Order validation failed: restaurantId: Path `restaurantId` is required.\n    at Document.invalidate (C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3012:17\n    at C:\\Users\\user1\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1368:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Yangi buyurtma yaratildi: 66d5604494100261c2978b85","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}

@@ -1,0 +1,3 @@
+C:\Users\Asad\source\repos\KepKetApi\obj\Debug\KepKetApi.njsproj.AssemblyReference.cache
+C:\Users\Asad\source\repos\KepKetApi\obj\Debug\KepKetApi.njsproj.CoreCompileInputs.cache
+C:\Users\Asad\source\repos\KepKetApi\bin\Microsoft.NodejsTools.WebRole.dll
