@@ -1,7 +1,6 @@
 const Restaurant = require("../models/restaurant.model");
 const config = require("../config/config");
 const jwt = require("jsonwebtoken");
-// Yangi restoran yaratish
 exports.createRestaurant = async (req, res) => {
   try {
     const restaurant = new Restaurant(req.body);
