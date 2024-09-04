@@ -6,12 +6,20 @@ const {
   validateOrderStatus,
 } = require("../utils/validators");
 const logger = require("../utils/logger");
+const tableModel = require("../models/table.model");
+const promoCodeModel = require("../models/promoCode.model");
 
 // Yangi buyurtma yaratish
 exports.createOrder = async (req, res) => {
   try {
-    const { restaurantId, tableNumber, items, customerName, customerPhone } =
-      req.body;
+    const {
+      restaurantId,
+      tableNumber,
+      items,
+      customerName,
+      customerPhone,
+      promoCode,
+    } = req.body;
 
     // Input validatsiyasi
     const { error } = validateOrderInput(req.body);
@@ -25,6 +33,14 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ message: "Restoran topilmadi" });
     }
 
+    const table = await tableModel.findById(tableNumber);
+    if (!table) {
+      return res.status(400).json({ message: "Bunday stol topilmadi" });
+    }
+    const getPromoCode = await promoCodeModel.findById(promoCode);
+    if (!getPromoCode) {
+      return res.status(400).json({ message: "Bunday PromoCode topilmadi" });
+    }
     // Umumiy narxni hisoblash
     let totalPrice = 0;
     for (let item of items) {
@@ -44,10 +60,27 @@ exports.createOrder = async (req, res) => {
       totalPrice,
       customerName,
       customerPhone,
+      promoCode,
     });
+
+    if (order) {
+      await promoCodeModel.findByIdAndUpdate(
+        promoCode,
+        {
+          $set: {
+            worked: true,
+            workedBy: order._id,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+    }
 
     await order.save();
     logger.info(`Yangi buyurtma yaratildi: ${order._id}`);
+
     res.status(201).json(order);
   } catch (error) {
     logger.error("Buyurtma yaratishda xatolik:", error);
@@ -61,18 +94,8 @@ exports.createOrder = async (req, res) => {
 // Barcha buyurtmalarni olish
 exports.getAllOrders = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
-    const options = {
-      page: parseInt(page, 10),
-      limit: parseInt(limit, 10),
-      sort: { createdAt: -1 },
-      populate: [
-        { path: "restaurant", select: "name" },
-        { path: "items.dish", select: "name price" },
-      ],
-    };
-
-    const orders = await Order.paginate({}, options);
+    const orders = await Order.find();
+    const filtered = orders.filter((c) => c.restaurantId == req.params.id);
     res.status(200).json(orders);
   } catch (error) {
     logger.error("Buyurtmalarni olishda xatolik:", error);
@@ -86,9 +109,7 @@ exports.getAllOrders = async (req, res) => {
 // Bitta buyurtmani ID bo'yicha olish
 exports.getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id)
-      .populate("restaurant", "name")
-      .populate("items.dish", "name price");
+    const order = await Order.findById(req.params.id);
     if (!order) {
       return res.status(404).json({ message: "Buyurtma topilmadi" });
     }
@@ -152,29 +173,6 @@ exports.deleteOrder = async (req, res) => {
   }
 };
 
-// Restoran bo'yicha buyurtmalarni olish
-exports.getOrdersByRestaurant = async (req, res) => {
-  try {
-    const { restaurantId } = req.params;
-    const { page = 1, limit = 10 } = req.query;
-    const options = {
-      page: parseInt(page, 10),
-      limit: parseInt(limit, 10),
-      sort: { createdAt: -1 },
-      populate: { path: "items.dish", select: "name price" },
-    };
-
-    const orders = await Order.paginate({ restaurant: restaurantId }, options);
-    res.status(200).json(orders);
-  } catch (error) {
-    logger.error("Restoran buyurtmalarini olishda xatolik:", error);
-    res.status(500).json({
-      message: "Restoran buyurtmalarini olishda xatolik yuz berdi",
-      error: error.message,
-    });
-  }
-};
-
 // Buyurtmani yangilash
 exports.updateOrder = async (req, res) => {
   try {
@@ -196,11 +194,7 @@ exports.updateOrder = async (req, res) => {
     const updatedOrder = await Order.findByIdAndUpdate(
       req.params.id,
       {
-        items: items || undefined,
-        totalPrice: items ? totalPrice : undefined,
-        status: status || undefined,
-        customerName: customerName || undefined,
-        customerPhone: customerPhone || undefined,
+        $set: req.body,
       },
       { new: true, omitUndefined: true }
     );

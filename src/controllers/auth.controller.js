@@ -3,11 +3,12 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 const bcrypt = require("bcrypt");
 const RestourantModel = require("../models/restaurant.model");
+const userModel = require("../models/user.model");
 
 exports.login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ username });
+    const user = await userModel.findOne({ username });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res
@@ -29,7 +30,6 @@ exports.login = async (req, res, next) => {
 exports.register = async (req, res, next) => {
   try {
     const { username, password, role, restourantId } = req.body;
-    console.log(restourantId);
     const restourant = await RestourantModel.findById(restourantId);
     if (restourant) {
       const user = new User({ username, password, role, restourantId });

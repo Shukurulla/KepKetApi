@@ -3,7 +3,7 @@ const Joi = require("joi");
 // Order input validation schema
 const orderInputSchema = Joi.object({
   restaurantId: Joi.string().required(),
-  tableNumber: Joi.number().required(),
+  tableNumber: Joi.string().required(),
   items: Joi.array()
     .items(
       Joi.object({
@@ -14,8 +14,7 @@ const orderInputSchema = Joi.object({
     .required(),
   status: Joi.string().required(),
   totalPrice: Joi.number().required(),
-  customerName: Joi.string(),
-  customerPhone: Joi.string(),
+  promoCode: Joi.string(),
 });
 
 // Order status validation schema

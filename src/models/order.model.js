@@ -7,7 +7,7 @@ const orderSchema = new mongoose.Schema(
       ref: "Restaurant",
       required: true,
     },
-    tableNumber: { type: Number, required: true },
+    tableNumber: { type: mongoose.Schema.Types.ObjectId, required: true },
     items: [
       {
         dish: { type: mongoose.Schema.Types.ObjectId, ref: "Dish" },
@@ -20,8 +20,6 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "preparing", "ready", "completed"],
       default: "pending",
     },
-    customerName: { type: String },
-    customerPhone: { type: String },
     promoCode: {
       type: String,
     },

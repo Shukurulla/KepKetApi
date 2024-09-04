@@ -1,18 +1,22 @@
 const Restaurant = require("../models/restaurant.model");
-
+const config = require("../config/config");
+const jwt = require("jsonwebtoken");
 // Yangi restoran yaratish
 exports.createRestaurant = async (req, res) => {
   try {
     const restaurant = new Restaurant(req.body);
     await restaurant.save();
-    res.status(201).json(restaurant);
+    const token = jwt.sign(
+      { userId: restaurant._id, role: restaurant.role },
+      config.jwtSecret,
+      { expiresIn: "30d" }
+    );
+    res.status(201).json({ restaurant, token });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Restoran yaratishda xatolik yuz berdi",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Restoran yaratishda xatolik yuz berdi",
+      error: error.message,
+    });
   }
 };
 
@@ -22,12 +26,10 @@ exports.getAllRestaurants = async (req, res) => {
     const restaurants = await Restaurant.find();
     res.json(restaurants);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Restoranlarni olishda xatolik yuz berdi",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Restoranlarni olishda xatolik yuz berdi",
+      error: error.message,
+    });
   }
 };
 
@@ -40,12 +42,10 @@ exports.getRestaurantById = async (req, res) => {
     }
     res.json(restaurant);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Restorani olishda xatolik yuz berdi",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Restorani olishda xatolik yuz berdi",
+      error: error.message,
+    });
   }
 };
 
@@ -62,12 +62,10 @@ exports.updateRestaurant = async (req, res) => {
     }
     res.json(restaurant);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Restorani yangilashda xatolik yuz berdi",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Restorani yangilashda xatolik yuz berdi",
+      error: error.message,
+    });
   }
 };
 
@@ -80,12 +78,10 @@ exports.deleteRestaurant = async (req, res) => {
     }
     res.json({ message: "Restoran muvaffaqiyatli ochirildi" });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Restorani ochirishda xatolik yuz berdi",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Restorani ochirishda xatolik yuz berdi",
+      error: error.message,
+    });
   }
 };
 
@@ -103,11 +99,9 @@ exports.addTable = async (req, res) => {
     }
     res.json(restaurant);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Stol qoshishda xatolik yuz berdi",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Stol qoshishda xatolik yuz berdi",
+      error: error.message,
+    });
   }
 };

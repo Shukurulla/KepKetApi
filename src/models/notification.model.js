@@ -1,12 +1,29 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const notificationSchema = new mongoose.Schema({
-    recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    message: { type: String, required: true },
-    type: { type: String, required: true },
-    read: { type: Boolean, default: false },
-    relatedItem: { type: mongoose.Schema.Types.ObjectId, refPath: 'onModel' },
-    onModel: { type: String, enum: ['Order', 'Dish', 'Reservation'] }
-}, { timestamps: true });
+const notificationSchema = new mongoose.Schema(
+  {
+    table: {
+      type: String,
+      required: true,
+    },
+    waiter: {
+      type: String,
+      required: true,
+    },
+    meals: {
+      type: Object,
+      required: true,
+    },
+    status: {
+      type: String,
+      default: "Pending",
+    },
+    restaurantId: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('Notification', notificationSchema);
+module.exports = mongoose.model("Notification", notificationSchema);

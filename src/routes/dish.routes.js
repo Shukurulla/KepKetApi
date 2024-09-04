@@ -1,6 +1,6 @@
-const express = require('express');
-const dishController = require('../controllers/dish.controller');
-const authMiddleware = require('../middlewares/auth.middleware');
+const express = require("express");
+const dishController = require("../controllers/dish.controller");
+const authMiddleware = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
@@ -63,8 +63,8 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Dish'
  */
-router.get('/', dishController.getAllDishes);
-router.post('/', authMiddleware, dishController.createDish);
+router.get("/:id", dishController.getAllDishes);
+router.post("/", authMiddleware, dishController.createDish);
 
 /**
  * @swagger
@@ -124,8 +124,8 @@ router.post('/', authMiddleware, dishController.createDish);
  *       200:
  *         description: Taom o'chirildi
  */
-router.get('/:id', dishController.getDish);
-router.put('/:id', authMiddleware, dishController.updateDish);
-router.delete('/:id', authMiddleware, dishController.deleteDish);
+router.get("/by-id/:id", dishController.getDish);
+router.put("/:id", authMiddleware, dishController.updateDish);
+router.delete("/:id", authMiddleware, dishController.deleteDish);
 
 module.exports = router;

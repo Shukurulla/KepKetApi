@@ -4,7 +4,10 @@ const orderController = require("../controllers/order.controller");
 
 const router = express.Router();
 
-router.get("/all-order", authMiddleware, orderController.getAllOrders);
+router.get("/all/:id", orderController.getAllOrders);
 router.post("/create-order", authMiddleware, orderController.createOrder);
+router.get("/:id", orderController.getOrderById);
+router.put("/:id", authMiddleware, orderController.updateOrder);
+router.delete("/:id", authMiddleware, orderController.deleteOrder);
 
 module.exports = router;
