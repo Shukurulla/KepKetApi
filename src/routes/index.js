@@ -54,7 +54,6 @@ try {
   registerRoute("/notifications", notificationRoutes);
 
   // QR kod route'lari
-  registerRoute("/qr", qrRoutes);
 
   // Restoran route'lari
   registerRoute("/restaurants", restaurantRoutes);
