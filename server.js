@@ -20,16 +20,13 @@ mongoose
   .then(() => logger.info("MongoDB ga muvaffaqiyatli ulandi"))
   .catch((err) => logger.error("MongoDB ga ulanishda xatolik:", err));
 
-app.use(function (req, res, next) {
-  //Enabling CORS
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
-  );
-  next();
-});
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"], // Faqat ma'lum metodlarga ruxsat berish
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api", routes);
