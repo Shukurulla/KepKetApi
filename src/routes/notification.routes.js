@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/", authMiddleware, notificationRoute.createaNotification);
 router.put("/complate/:id", authMiddleware, notificationRoute.complate);
 router.get("/all/:id", authMiddleware, notificationRoute.getAllNotification);
-router.get("/:id", authMiddleware, notificationRoute.getNotification);
+router.get("/:id", notificationRoute.getNotification);
 router.put("/:id", authMiddleware, notificationRoute.editNotification);
 router.delete("/:id", authMiddleware, notificationRoute.deleteNotification);
 
