@@ -13,6 +13,19 @@ exports.createPromoCode = async (req, res, next) => {
     next();
   }
 };
+
+exports.getCode = async (req, res, next) => {
+  try {
+    const code = await promoCodeModel.find({ code: req.params.id });
+    if (!code) {
+      return res.status(400).json({ error: "Bunday promocode topilmadi" });
+    }
+    res.status(200).json(code);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+    next();
+  }
+};
 exports.getAllPromoCodes = async (req, res, next) => {
   try {
     const promoCodes = await promoCodeModel.find();
