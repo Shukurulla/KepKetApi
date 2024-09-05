@@ -3,11 +3,26 @@ const router = express.Router();
 const restaurantController = require("../controllers/restaurant.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 
-router.post("/", restaurantController.createRestaurant);
-router.post("/login", restaurantController.loginRestaurant);
-router.get("/", restaurantController.getAllRestaurants);
-router.get("/:id", restaurantController.getRestaurantById);
-router.put("/:id", authMiddleware, restaurantController.updateRestaurant);
-router.delete("/:id", authMiddleware, restaurantController.deleteRestaurant);
-router.post("/:id/tables", authMiddleware, restaurantController.addTable);
+router.post("/", cors(), restaurantController.createRestaurant);
+router.post("/login", cors(), restaurantController.loginRestaurant);
+router.get("/", cors(), restaurantController.getAllRestaurants);
+router.get("/:id", cors(), restaurantController.getRestaurantById);
+router.put(
+  "/:id",
+  authMiddleware,
+  cors(),
+  restaurantController.updateRestaurant
+);
+router.delete(
+  "/:id",
+  authMiddleware,
+  cors(),
+  restaurantController.deleteRestaurant
+);
+router.post(
+  "/:id/tables",
+  authMiddleware,
+  cors(),
+  restaurantController.addTable
+);
 module.exports = router;
