@@ -6,12 +6,11 @@ const restaurantModel = require("../models/restaurant.model");
 exports.createRestaurant = async (req, res) => {
   try {
     const { password } = req.body;
-    const hashedPassword = bcrypt.hash(password, 10);
-    const restaurant = new Restaurant({
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const restaurant = await Restaurant.create({
       ...req.body,
       password: hashedPassword,
     });
-    await restaurant.save();
     const token = jwt.sign(
       { userId: restaurant._id, role: restaurant.role },
       config.jwtSecret,
@@ -29,12 +28,10 @@ exports.loginRestaurant = async (req, res, next) => {
   try {
     const { password, name } = req.body;
     const restaurant = await restaurantModel.find({ name });
-    if (!restaurant) {
-      return res.status(400).json({ error: "Bunday restoran nomi topilmadi" });
-    }
-    const comparePassword = bcrypt.compare(password, restaurant.password);
-    if (!comparePassword) {
-      return res.status(400).json({ error: "Password notogri kiritildi" });
+    if (!restaurant || !(await bcrypt.compare(password, restaurant.password))) {
+      return res
+        .status(401)
+        .json({ message: "Notogri restoran nomi yoki parol" });
     }
     const token = jwt.sign(
       { userId: restaurant._id, role: restaurant.role },
