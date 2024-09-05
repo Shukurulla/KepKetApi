@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const restaurantController = require("../controllers/restaurant.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
+const cors = require("cors");
 
 router.post("/", cors(), restaurantController.createRestaurant);
 router.post("/login", cors(), restaurantController.loginRestaurant);

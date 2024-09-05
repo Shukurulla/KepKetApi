@@ -10,7 +10,6 @@ const swaggerSpec = require("./src/config/swagger");
 
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 
 mongoose
@@ -21,6 +20,16 @@ mongoose
   .then(() => logger.info("MongoDB ga muvaffaqiyatli ulandi"))
   .catch((err) => logger.error("MongoDB ga ulanishda xatolik:", err));
 
+app.use(function (req, res, next) {
+  //Enabling CORS
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+  );
+  next();
+});
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api", routes);
