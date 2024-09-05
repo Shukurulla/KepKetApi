@@ -10,7 +10,7 @@ const reservationRoutes = require("./reservation.routes");
 const reviewRoutes = require("./review.routes");
 const promoCodeRoutes = require("./promoCode.routes");
 const notificationRoutes = require("./notification.routes");
-const qrRoutes = require("./qr.routes");
+const callRoutes = require("./toCall.routes");
 const restaurantRoutes = require("./restaurant.routes");
 const tableRoutes = require("./table.routes");
 const categoryRoutes = require("./category.routes");
@@ -53,7 +53,8 @@ try {
   // Bildirishnomalar route'lari
   registerRoute("/notifications", notificationRoutes);
 
-  // QR kod route'lari
+  // Call Routes
+  registerRoute("/call", callRoutes);
 
   // Restoran route'lari
   registerRoute("/restaurants", restaurantRoutes);

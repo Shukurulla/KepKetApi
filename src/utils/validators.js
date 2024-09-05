@@ -8,7 +8,7 @@ const orderInputSchema = Joi.object({
     .items(
       Joi.object({
         dish: Joi.string().required(),
-        quantity: Joi.number().min(3).required(),
+        quantity: Joi.number().min(1).required(),
       })
     )
     .required(),

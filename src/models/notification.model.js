@@ -3,12 +3,22 @@ const mongoose = require("mongoose");
 const notificationSchema = new mongoose.Schema(
   {
     table: {
-      type: String,
+      type: Object,
       required: true,
     },
     waiter: {
-      type: String,
+      type: Object,
       required: true,
+    },
+    waiter: {
+      id: {
+        type: String,
+        required: true,
+      },
+      name: {
+        type: String,
+        required: true,
+      },
     },
     meals: {
       type: Object,

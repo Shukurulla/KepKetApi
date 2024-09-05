@@ -8,6 +8,7 @@ const {
 const logger = require("../utils/logger");
 const tableModel = require("../models/table.model");
 const promoCodeModel = require("../models/promoCode.model");
+const waiterModel = require("../models/waiter.model");
 
 // Yangi buyurtma yaratish
 exports.createOrder = async (req, res) => {
@@ -41,6 +42,11 @@ exports.createOrder = async (req, res) => {
     if (!getPromoCode) {
       return res.status(400).json({ message: "Bunday PromoCode topilmadi" });
     }
+    const waiters = await waiterModel.find();
+    const equalWaiter = waiters.filter((c) => c.restaurantId == restaurantId);
+    const freeWaiters = equalWaiter.filter((c) => c.busy == false);
+    const randomWaiter =
+      freeWaiters[Math.floor(Math.random() * freeWaiters.length)];
     // Umumiy narxni hisoblash
     let totalPrice = 0;
     for (let item of items) {
@@ -61,6 +67,7 @@ exports.createOrder = async (req, res) => {
       customerName,
       customerPhone,
       promoCode,
+      waiter: randomWaiter._id,
     });
 
     if (order) {

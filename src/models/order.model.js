@@ -23,7 +23,7 @@ const orderSchema = new mongoose.Schema(
     promoCode: {
       type: String,
     },
-    // waiter: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    waiter: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

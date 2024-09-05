@@ -594,3 +594,181 @@
 {"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
 {"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
 {"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"error":{"code":"ERR_HTTP_HEADERS_SENT"},"level":"error","message":"Cannot set headers after they are sent to the client","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"error","message":"Buyurtma yaratishda xatolik: Cannot read properties of undefined (reading '_id')","service":"restaurant-automation","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:70:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"error","message":"Buyurtma yaratishda xatolik: Cannot read properties of undefined (reading '_id')","service":"restaurant-automation","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:71:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"error","message":"Buyurtma yaratishda xatolik: Cannot read properties of undefined (reading '_id')","service":"restaurant-automation","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:71:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"error","message":"Buyurtma yaratishda xatolik: Cannot read properties of undefined (reading '_id')","service":"restaurant-automation","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:71:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"error","message":"Buyurtma yaratishda xatolik: Cannot read properties of undefined (reading '_id')","service":"restaurant-automation","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:71:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"error","message":"Buyurtma yaratishda xatolik: Cannot read properties of undefined (reading '_id')","service":"restaurant-automation","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:71:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Yangi buyurtma yaratildi: 66d84258496e5bcabe7b2254","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"_message":"Order validation failed","errors":{"totalPrice":{"kind":"Number","message":"Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","name":"CastError","path":"totalPrice","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","service":"restaurant-automation","stack":"ValidationError: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"\n    at Document.invalidate (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1464:12)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1119:16)\n    at model.Document (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:165:12)\n    at model.Model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:123:12)\n    at new model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:4758:15)\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:73:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"_message":"Order validation failed","errors":{"totalPrice":{"kind":"Number","message":"Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","name":"CastError","path":"totalPrice","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","service":"restaurant-automation","stack":"ValidationError: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"\n    at Document.invalidate (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1464:12)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1119:16)\n    at model.Document (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:165:12)\n    at model.Model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:123:12)\n    at new model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:4758:15)\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:75:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"_message":"Order validation failed","errors":{"totalPrice":{"kind":"Number","message":"Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","name":"CastError","path":"totalPrice","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","service":"restaurant-automation","stack":"ValidationError: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"\n    at Document.invalidate (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1464:12)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1119:16)\n    at model.Document (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:165:12)\n    at model.Model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:123:12)\n    at new model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:4758:15)\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:75:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"_message":"Order validation failed","errors":{"totalPrice":{"kind":"Number","message":"Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","name":"CastError","path":"totalPrice","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","service":"restaurant-automation","stack":"ValidationError: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"\n    at Document.invalidate (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1464:12)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1119:16)\n    at model.Document (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:165:12)\n    at model.Model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:123:12)\n    at new model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:4758:15)\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:75:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"_message":"Order validation failed","errors":{"totalPrice":{"kind":"Number","message":"Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","name":"CastError","path":"totalPrice","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","service":"restaurant-automation","stack":"ValidationError: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"\n    at Document.invalidate (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1464:12)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1119:16)\n    at model.Document (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:165:12)\n    at model.Model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:123:12)\n    at new model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:4758:15)\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:73:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"_message":"Order validation failed","errors":{"totalPrice":{"kind":"Number","message":"Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","name":"CastError","path":"totalPrice","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","service":"restaurant-automation","stack":"ValidationError: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"\n    at Document.invalidate (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1464:12)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1119:16)\n    at model.Document (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:165:12)\n    at model.Model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:123:12)\n    at new model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:4758:15)\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:69:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"_message":"Order validation failed","errors":{"totalPrice":{"kind":"Number","message":"Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","name":"CastError","path":"totalPrice","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}},"level":"error","message":"Buyurtma yaratishda xatolik: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"","service":"restaurant-automation","stack":"ValidationError: Order validation failed: totalPrice: Cast to Number failed for value \"NaN\" (type number) at path \"totalPrice\"\n    at Document.invalidate (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:3219:32)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1464:12)\n    at model.$set (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:1119:16)\n    at model.Document (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\document.js:165:12)\n    at model.Model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:123:12)\n    at new model (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\model.js:4758:15)\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:69:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"error","message":"Buyurtma yaratishda xatolik: promoCodes is not defined","service":"restaurant-automation","stack":"ReferenceError: promoCodes is not defined\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:66:32)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Yangi buyurtma yaratildi: 66d849384cbf73ec20e1a691","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Yangi buyurtma yaratildi: 66d8495302f288b9151da505","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Yangi buyurtma yaratildi: 66d849c6ebacce8804781d2a","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"error":{"body":"{\r\n    \"table\": \"66d713cb4378ac78688e19b8\",\r\n    \"waiter\": \"66d80f1cb5b41b0bf9760999\",\r\n    \"meals\": [\"66d54f6f2cfadb2d188f91e2\"],\r\n    \"restaurantId\": \"66d6ec6db577d62a4df49eb7\",\r\n}","expose":true,"status":400,"statusCode":400,"type":"entity.parse.failed"},"level":"error","message":"Expected double-quoted property name in JSON at position 181 (line 6 column 1)","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"error":{"body":"{\r\n    \"table\": \"66d713cb4378ac78688e19b8\",\r\n    \"waiter\": \"66d80f1cb5b41b0bf9760999\",\r\n    \"meals\": [\"66d54f6f2cfadb2d188f91e2\"],\r\n    \"restaurantId\": \"66d6ec6db577d62a4df49eb7\",\r\n}","expose":true,"status":400,"statusCode":400,"type":"entity.parse.failed"},"level":"error","message":"Expected double-quoted property name in JSON at position 181 (line 6 column 1)","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Yangi buyurtma yaratildi: 66d852c8d709d0fdd7c1404e","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Yangi buyurtma yaratildi: 66d93324227dae76a70ffab6","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"code":"ETIMEOUT","hostname":"_mongodb._tcp.cluster0.zzgct.mongodb.net","level":"error","message":"MongoDB ga ulanishda xatolik: querySrv ETIMEOUT _mongodb._tcp.cluster0.zzgct.mongodb.net","service":"restaurant-automation","stack":"Error: querySrv ETIMEOUT _mongodb._tcp.cluster0.zzgct.mongodb.net\n    at QueryReqWrap.onresolve [as oncomplete] (node:internal/dns/promises:293:17)","syscall":"querySrv"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"code":"ECONNREFUSED","hostname":"_mongodb._tcp.cluster0.zzgct.mongodb.net","level":"error","message":"MongoDB ga ulanishda xatolik: querySrv ECONNREFUSED _mongodb._tcp.cluster0.zzgct.mongodb.net","service":"restaurant-automation","stack":"Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.zzgct.mongodb.net\n    at QueryReqWrap.onresolve [as oncomplete] (node:internal/dns/promises:293:17)","syscall":"querySrv"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"error":{"code":"ERR_HTTP_HEADERS_SENT"},"level":"error","message":"Cannot set headers after they are sent to the client","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"error":{"code":"ERR_HTTP_HEADERS_SENT"},"level":"error","message":"Cannot set headers after they are sent to the client","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}

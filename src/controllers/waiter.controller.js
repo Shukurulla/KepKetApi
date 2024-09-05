@@ -129,12 +129,9 @@ exports.editPassword = async (req, res, next) => {
 
 exports.deleteWaiter = async (req, res, next) => {
   try {
-    const waiter = await waiterModel.findByIdAndDelete(req.params.id);
-    if (waiter == null) {
-      return res.json({ msg: "Ofitsiant muaffaqiyati ochirildi" });
-    } else {
-      return res.json({ error: "Ofitsiyant ochirilmadi" });
-    }
+    await waiterModel.findByIdAndDelete(req.params.id);
+    const waiter = await waiterModel.findById(req.params.id);
+    res.json(waiter);
   } catch (error) {
     res.json({ error: error.message });
     next();

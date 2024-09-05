@@ -36,6 +36,10 @@ const WaiterSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  busy: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("Waiter", WaiterSchema);
