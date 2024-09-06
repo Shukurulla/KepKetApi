@@ -20,6 +20,7 @@ const notificationSchema = new mongoose.Schema(
         required: true,
       },
     },
+
     meals: {
       type: Object,
       required: true,

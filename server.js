@@ -11,6 +11,8 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./src/config/swagger");
 const { createOrder } = require("./src/controllers/order.controller");
 const waiterModel = require("./src/models/waiter.model");
+const notificationModel = require("./src/models/notification.model");
+const orderModel = require("./src/models/order.model");
 
 const app = express();
 
@@ -55,17 +57,29 @@ io.on("connection", (socket) => {
       await createOrder(req, res);
     } catch (error) {}
   });
+  let notifications;
   socket.on("create_notification", async (data) => {
     try {
-      const notification = await waiterModel.findByIdAndUpdate(
-        data.waiterId,
-        {
-          $set: { notification: data, complated: false },
-        },
-        { new: true }
-      );
-      socket.to(data.waiterId).emit("get_notification", notification);
-    } catch (error) {}
+      const notification = await notificationModel.create(data);
+      console.log("Yangi bildirishnoma:", notification);
+      notifications = notification;
+
+      // Ofitsiantga xabar yuborish
+      io.to(data.waiter.id).emit("get_notification", notification);
+    } catch (error) {
+      console.error("Bildirishnoma yaratishda xatolik:", error);
+    }
+  });
+  socket.on("all_orders", async (data) => {
+    const allOrders = await orderModel.find();
+    const filterOrders = allOrders.filter((c) => c.restaurantId == data);
+    socket.emit("get_orders", filterOrders);
+  });
+  // Ofitsiant sahifasida ID bilan ulanish
+  socket.on("waiter_connected", async (waiterId) => {
+    socket.join(waiterId);
+    socket.to(waiterId).emit("get", notifications);
+    notifications = "";
   });
 });
 
