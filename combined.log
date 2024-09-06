@@ -809,3 +809,96 @@
 {"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
 {"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
 {"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"error","message":"Buyurtma yaratishda xatolik: Cannot destructure property 'restaurantId' of 'req.body' as it is undefined.","service":"restaurant-automation","stack":"TypeError: Cannot destructure property 'restaurantId' of 'req.body' as it is undefined.\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:17:7)\n    at Socket.<anonymous> (C:\\Users\\User\\Desktop\\KepKetApi\\server.js:54:13)\n    at Socket.emit (node:events:520:28)\n    at Socket.emitUntyped (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\socket.io\\dist\\typed-events.js:69:22)\n    at C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\socket.io\\dist\\socket.js:704:39\n    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)"}
+{"level":"error","message":"Buyurtma yaratishda xatolik: Cannot destructure property 'restaurantId' of 'req.body' as it is undefined.","service":"restaurant-automation","stack":"TypeError: Cannot destructure property 'restaurantId' of 'req.body' as it is undefined.\n    at exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:17:7)\n    at Socket.<anonymous> (C:\\Users\\User\\Desktop\\KepKetApi\\server.js:54:13)\n    at Socket.emit (node:events:520:28)\n    at Socket.emitUntyped (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\socket.io\\dist\\typed-events.js:69:22)\n    at C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\socket.io\\dist\\socket.js:704:39\n    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"kind":"ObjectId","level":"error","message":"Buyurtma yaratishda xatolik: Cast to ObjectId failed for value \"Table1\" (type string) at path \"_id\" for model \"Table\"","path":"_id","reason":{},"service":"restaurant-automation","stack":"CastError: Cast to ObjectId failed for value \"Table1\" (type string) at path \"_id\" for model \"Table\"\n    at ObjectId.cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schema\\objectid.js:250:11)\n    at SchemaType.applySetters (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1219:12)\n    at SchemaType.castForQuery (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1633:15)\n    at cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\cast.js:379:32)\n    at Query.cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:4927:12)\n    at Query._castConditions (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:2237:10)\n    at model.Query._findOne (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:2533:8)\n    at model.Query.exec (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:4447:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:37:19)","stringValue":"\"Table1\"","value":"Table1","valueType":"string"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"kind":"ObjectId","level":"error","message":"Buyurtma yaratishda xatolik: Cast to ObjectId failed for value \"{ id: '66d9b7f1d4c7a891ab31162e', number: '1' }\" (type Object) at path \"_id\" for model \"Table\"","path":"_id","reason":{},"service":"restaurant-automation","stack":"CastError: Cast to ObjectId failed for value \"{ id: '66d9b7f1d4c7a891ab31162e', number: '1' }\" (type Object) at path \"_id\" for model \"Table\"\n    at ObjectId.cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schema\\objectid.js:250:11)\n    at SchemaType.applySetters (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1219:12)\n    at SchemaType.castForQuery (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1633:15)\n    at cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\cast.js:308:34)\n    at Query.cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:4927:12)\n    at Query._castConditions (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:2237:10)\n    at model.Query._findOne (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:2533:8)\n    at model.Query.exec (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:4447:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:31:19)","stringValue":"\"{ id: '66d9b7f1d4c7a891ab31162e', number: '1' }\"","value":{"id":"66d9b7f1d4c7a891ab31162e","number":"1"},"valueType":"Object"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"kind":"ObjectId","level":"error","message":"Buyurtma yaratishda xatolik: Cast to ObjectId failed for value \"{ id: '66d9b7f1d4c7a891ab31162e', number: 1 }\" (type Object) at path \"_id\" for model \"Table\"","path":"_id","reason":{},"service":"restaurant-automation","stack":"CastError: Cast to ObjectId failed for value \"{ id: '66d9b7f1d4c7a891ab31162e', number: 1 }\" (type Object) at path \"_id\" for model \"Table\"\n    at ObjectId.cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schema\\objectid.js:250:11)\n    at SchemaType.applySetters (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1219:12)\n    at SchemaType.castForQuery (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1633:15)\n    at cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\cast.js:308:34)\n    at Query.cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:4927:12)\n    at Query._castConditions (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:2237:10)\n    at model.Query._findOne (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:2533:8)\n    at model.Query.exec (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:4447:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:31:19)","stringValue":"\"{ id: '66d9b7f1d4c7a891ab31162e', number: 1 }\"","value":{"id":"66d9b7f1d4c7a891ab31162e","number":1},"valueType":"Object"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"kind":"ObjectId","level":"error","message":"Buyurtma yaratishda xatolik: Cast to ObjectId failed for value \"{ id: '66d9b7f1d4c7a891ab31162e', number: 1 }\" (type Object) at path \"_id\" for model \"Table\"","path":"_id","reason":{},"service":"restaurant-automation","stack":"CastError: Cast to ObjectId failed for value \"{ id: '66d9b7f1d4c7a891ab31162e', number: 1 }\" (type Object) at path \"_id\" for model \"Table\"\n    at ObjectId.cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schema\\objectid.js:250:11)\n    at SchemaType.applySetters (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1219:12)\n    at SchemaType.castForQuery (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\schematype.js:1633:15)\n    at cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\cast.js:308:34)\n    at Query.cast (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:4927:12)\n    at Query._castConditions (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:2237:10)\n    at model.Query._findOne (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:2533:8)\n    at model.Query.exec (C:\\Users\\User\\Desktop\\KepKetApi\\node_modules\\mongoose\\lib\\query.js:4447:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async exports.createOrder (C:\\Users\\User\\Desktop\\KepKetApi\\src\\controllers\\order.controller.js:31:19)","stringValue":"\"{ id: '66d9b7f1d4c7a891ab31162e', number: 1 }\"","value":{"id":"66d9b7f1d4c7a891ab31162e","number":1},"valueType":"Object"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Yangi buyurtma yaratildi: 66daa2b18164782591f147f5","service":"restaurant-automation"}
+{"level":"info","message":"Yangi buyurtma yaratildi: 66daa3248164782591f147ff","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Yangi buyurtma yaratildi: 66daa7a7f67a04c990957a19","service":"restaurant-automation"}

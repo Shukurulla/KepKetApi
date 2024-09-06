@@ -5,12 +5,13 @@ const cors = require("cors");
 const routes = require("./src/routes");
 const errorMiddleware = require("./src/middlewares/error.middleware");
 const logger = require("./src/utils/logger");
-const swaggerUi = require("swagger-ui-express");
-const swaggerSpec = require("./src/config/swagger");
 const http = require("http");
 const { Server } = require("socket.io");
-const notificationModel = require("./src/models/notification.model");
-const orderModel = require("./src/models/order.model");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./src/config/swagger");
+const { createOrder } = require("./src/controllers/order.controller");
+const waiterModel = require("./src/models/waiter.model");
+
 const app = express();
 
 app.use(express.json());
@@ -22,13 +23,6 @@ app.use(
   })
 );
 
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
 mongoose
   .connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
@@ -37,15 +31,40 @@ mongoose
   .then(() => logger.info("MongoDB ga muvaffaqiyatli ulandi"))
   .catch((err) => logger.error("MongoDB ga ulanishda xatolik:", err));
 
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Frontend URL ni ruxsat bering
+  },
+});
 io.on("connection", (socket) => {
-  console.log(socket.id);
-
-  socket.on("post_order", async (data) => {
+  console.log("A user connected:", socket.id);
+  socket.on("create_order", async (data) => {
     try {
-      const orders = await orderModel.create(data);
-      if (orders) {
-        socket.broadcast.emit("get_order", orders);
-      }
+      const req = {
+        body: data,
+      };
+      const res = {
+        status: (statusCode) => ({
+          json: (response) => {
+            socket.emit("order_response", { statusCode, response });
+          },
+        }),
+      };
+
+      await createOrder(req, res);
+    } catch (error) {}
+  });
+  socket.on("create_notification", async (data) => {
+    try {
+      const notification = await waiterModel.findByIdAndUpdate(
+        data.waiterId,
+        {
+          $set: { notification: data, complated: false },
+        },
+        { new: true }
+      );
+      socket.to(data.waiterId).emit("get_notification", notification);
     } catch (error) {}
   });
 });
@@ -57,7 +76,7 @@ app.use("/api", routes);
 app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   logger.info(`Server ${PORT} portda ishga tushdi`);
 });
 

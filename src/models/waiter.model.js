@@ -32,6 +32,10 @@ const WaiterSchema = mongoose.Schema({
   updatedAt: {
     type: Date,
   },
+  notification: {
+    type: Object,
+    default: [],
+  },
   restaurantId: {
     type: String,
     required: true,

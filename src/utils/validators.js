@@ -3,11 +3,11 @@ const Joi = require("joi");
 // Order input validation schema
 const orderInputSchema = Joi.object({
   restaurantId: Joi.string().required(),
-  tableNumber: Joi.string().required(),
+  tableNumber: Joi.object().required(),
   items: Joi.array()
     .items(
       Joi.object({
-        dish: Joi.string().required(),
+        dish: Joi.object().required(),
         quantity: Joi.number().min(1).required(),
       })
     )

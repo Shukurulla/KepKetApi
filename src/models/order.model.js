@@ -3,14 +3,14 @@ const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema(
   {
     restaurantId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Restaurant",
       required: true,
     },
-    tableNumber: { type: mongoose.Schema.Types.ObjectId, required: true },
+    tableNumber: { type: Object, required: true },
     items: [
       {
-        dish: { type: mongoose.Schema.Types.ObjectId, ref: "Dish" },
+        dish: { type: Object, ref: "Dish" },
         quantity: { type: Number, required: true },
       },
     ],
@@ -23,7 +23,7 @@ const orderSchema = new mongoose.Schema(
     promoCode: {
       type: String,
     },
-    waiter: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    waiter: { type: Object, ref: "User" },
   },
   { timestamps: true }
 );
