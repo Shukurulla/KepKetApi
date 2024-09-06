@@ -8,8 +8,8 @@
     }
   ],
   "functions": {
-    "api/**/*.js": {
-      "runtime": "nodejs18.x"
+    "api/socket.js": {
+      "runtime": "nodejs16.x"
     }
   }
 }
