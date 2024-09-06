@@ -1,14 +1,15 @@
 {
-  "rewrites": [
-    { "source": "/socket.io/:path*", "destination": "/api/socketio/:path*" }
-  ],
-  "headers": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/socket.io/:path*",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Connection", "value": "keep-alive" }
-      ]
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
     }
   ]
 }
