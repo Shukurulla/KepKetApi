@@ -34,13 +34,7 @@ mongoose
   .catch((err) => logger.error("MongoDB ga ulanishda xatolik:", err));
 
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"], // Faqat ma'lum metodlarga ruxsat berish
-    allowedHeaders: ["Content-Type", "Authorization"],
-  },
-});
+const io = new Server(server);
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
   socket.on("create_order", async (data) => {
