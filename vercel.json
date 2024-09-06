@@ -7,9 +7,5 @@
       "dest": "/server.js"
     }
   ],
-  "functions": {
-    "api/socket.js": {
-      "runtime": "nodejs18.x"
-    }
-  }
+  "builds": [{ "src": "api/**/*.js", "use": "@vercel/node" }]
 }
