@@ -36,7 +36,9 @@ mongoose
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*", // Frontend URL ni ruxsat bering
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"], // Faqat ma'lum metodlarga ruxsat berish
+    allowedHeaders: ["Content-Type", "Authorization"],
   },
 });
 io.on("connection", (socket) => {
