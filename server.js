@@ -17,13 +17,13 @@ const orderModel = require("./src/models/order.model");
 const app = express();
 
 app.use(express.json());
-// app.use(
-//   cors({
-//     origin: "*",
-//     methods: ["GET", "POST", "PUT", "DELETE"], // Faqat ma'lum metodlarga ruxsat berish
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//   })
-// );
+app.use(
+  cors({
+    origin: "*",
+    optionsSuccessStatus: 200,
+    credentials: true,
+  })
+);
 
 mongoose
   .connect(process.env.DATABASE_URL, {
@@ -36,7 +36,7 @@ mongoose
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "https://your-react-app-domain.com"], // React ilovangizning domeni
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
