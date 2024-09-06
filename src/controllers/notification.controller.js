@@ -55,6 +55,23 @@ exports.getAllNotification = async (req, res, next) => {
     next();
   }
 };
+exports.getMyNotification = async (req, res, next) => {
+  try {
+    const notifications = await notificationModel.find();
+    const myNotifications = notifications.filter(
+      (c) => c.waiter.id == req.params.id
+    );
+    const pendingNotifications = myNotifications.filter(
+      (c) => c.status == "Pending"
+    );
+    if (!myNotifications) {
+      return res
+        .status(400)
+        .json({ error: "Notification yaratishda xatolik yuz berdi" });
+    }
+    res.status(200).json(pendingNotifications);
+  } catch (error) {}
+};
 exports.getNotification = async (req, res, next) => {
   try {
     const notification = await notificationModel.findById(req.params.id);
