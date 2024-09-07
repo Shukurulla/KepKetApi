@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const restaurantModel = require("../models/restaurant.model");
 
 exports.authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -12,7 +13,7 @@ exports.authenticateJWT = (req, res, next) => {
       }
 
       try {
-        const foundUser = await userModel.findById(user.userId);
+        const foundUser = await restaurantModel.findById(user.userId);
         if (!foundUser) {
           return res.sendStatus(404);
         }
