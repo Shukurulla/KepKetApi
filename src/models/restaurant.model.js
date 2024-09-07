@@ -47,6 +47,11 @@ const restaurantSchema = new mongoose.Schema(
         },
       },
     ],
+    restaurantLogo: {
+      type: String,
+      default:
+        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.logodesign.net%2Flogos%2Ftext&psig=AOvVaw2n28FnvLmAfR87qW79pEpX&ust=1725803179656000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOik9oD8sIgDFQAAAAAdAAAAABAE",
+    },
   },
   { timestamps: true }
 );
