@@ -82,8 +82,7 @@ exports.createOrder = async (req, res) => {
 
 exports.waiterCreateOrder = async (req, res) => {
   try {
-    const { restaurantId, totalPrice, waiter, tableNumber, items, promoCode } =
-      req.body;
+    const { restaurantId, waiter, tableNumber, items, promoCode } = req.body;
 
     // Restoranni tekshirish
     const restaurant = await Restaurant.findById(restaurantId);
@@ -99,10 +98,15 @@ exports.waiterCreateOrder = async (req, res) => {
     if (!getPromoCode) {
       return res.status(400).json({ message: "Bunday PromoCode topilmadi" });
     }
+
+    const totalPrice = items.reduce((total, item) => {
+      return total + item.dish.price * item.quantity;
+    }, 0);
+
     await waiterModel.findByIdAndUpdate(waiter.id, {
       $set: { busy: true },
     });
-    const order = await orderModel.create(req.body);
+    const order = await orderModel.create({ ...req.body, totalPrice });
     if (!order) {
       res.status(400).json({ error: "Buyurtma berishda hatolik ketti" });
     }
