@@ -3,7 +3,7 @@ const Dish = require("../models/dish.model");
 
 exports.createDish = async (req, res, next) => {
   try {
-    const category = await categoryModel.findById(req.body.category);
+    const category = await categoryModel.findById(req.body.category.id);
     if (category) {
       const dish = new Dish(req.body);
       await dish.save();

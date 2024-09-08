@@ -9,6 +9,7 @@ const logger = require("../utils/logger");
 const tableModel = require("../models/table.model");
 const promoCodeModel = require("../models/promoCode.model");
 const waiterModel = require("../models/waiter.model");
+const orderModel = require("../models/order.model");
 
 // Yangi buyurtma yaratish
 exports.createOrder = async (req, res) => {
@@ -77,6 +78,37 @@ exports.createOrder = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+exports.waiterCreateOrder = async (req, res) => {
+  try {
+    const { restaurantId, totalPrice, waiter, tableNumber, items, promoCode } =
+      req.body;
+
+    // Restoranni tekshirish
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (!restaurant) {
+      return res.status(400).json({ message: "Restoran topilmadi" });
+    }
+
+    const table = await tableModel.findById(tableNumber.id);
+    if (!table) {
+      return res.status(400).json({ message: "Bunday stol topilmadi" });
+    }
+    const getPromoCode = await promoCodeModel.findById(promoCode);
+    if (!getPromoCode) {
+      return res.status(400).json({ message: "Bunday PromoCode topilmadi" });
+    }
+    await waiterModel.findByIdAndUpdate(waiter.id, {
+      $set: { busy: true },
+    });
+    const order = await orderModel.create(req.body);
+    if (!order) {
+      res.status(400).json({ error: "Buyurtma berishda hatolik ketti" });
+    }
+
+    res.json(order);
+  } catch (error) {}
 };
 
 // Barcha buyurtmalarni olish

@@ -12,6 +12,9 @@ const orderInputSchema = Joi.object({
       })
     )
     .required(),
+  who: Joi.string(),
+  waiter: Joi.object(),
+
   status: Joi.string().required(),
   totalPrice: Joi.number().required(),
   promoCode: Joi.string(),

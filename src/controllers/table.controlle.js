@@ -8,12 +8,6 @@ exports.createTable = async (req, res, next) => {
   if (restaurant) {
     const tables = await tableModel.create(req.body);
     if (tables) {
-      const newRestauran = await restaurantModel.findByIdAndUpdate(
-        restaurantId,
-        { $push: { tables: { number: tableNumber, restaurantId, capacity } } },
-        { new: true }
-      );
-
       res.status(201).json({ tables });
     } else {
       next();

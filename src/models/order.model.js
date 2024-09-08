@@ -17,11 +17,14 @@ const orderSchema = new mongoose.Schema(
     totalPrice: { type: Number, required: true },
     status: {
       type: String,
-      enum: ["pending", "preparing", "ready", "completed"],
-      default: "pending",
+      default: "Pending",
     },
     promoCode: {
       type: String,
+    },
+    who: {
+      type: String,
+      default: "Client",
     },
     waiter: { type: Object, ref: "User" },
   },
