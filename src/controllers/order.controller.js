@@ -120,7 +120,7 @@ exports.waiterCreateOrder = async (req, res) => {
     }
     const currentCode = await promoCodeModel.findOne({ code: promoCode });
     await promoCodeModel.findByIdAndUpdate(currentCode._id, {
-      $set: { worked: true },
+      $set: { worked: true, workedBy: order._id },
     });
     res.json(order);
   } catch (error) {
