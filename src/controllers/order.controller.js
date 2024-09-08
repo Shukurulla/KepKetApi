@@ -84,29 +84,40 @@ exports.waiterCreateOrder = async (req, res) => {
   try {
     const { restaurantId, waiter, tableNumber, items, promoCode } = req.body;
 
+    // Restoranni tekshirish
     const restaurant = await Restaurant.findById(restaurantId);
     if (!restaurant) {
       return res.status(400).json({ message: "Restoran topilmadi" });
     }
 
+    // Stolni tekshirish
     const table = await tableModel.findById(tableNumber.id);
     if (!table) {
       return res.status(400).json({ message: "Bunday stol topilmadi" });
     }
 
-    const getPromoCode = await promoCodeModel.findOne({ code: promoCode });
-    if (!getPromoCode) {
-      return res.status(400).json({ message: "Bunday PromoCode topilmadi" });
-    }
-    if (getPromoCode.worked) {
-      return res.status(400).json({ error: "Bu promokod ishlatilgan" });
+    let discount = 0;
+
+    if (promoCode) {
+      // Promo kodni tekshirish
+      const getPromoCode = await promoCodeModel.findOne({ code: promoCode });
+      if (!getPromoCode) {
+        return res.status(400).json({ message: "Bunday PromoCode topilmadi" });
+      }
+      if (getPromoCode.worked) {
+        return res.status(400).json({ error: "Bu promokod ishlatilgan" });
+      }
+      // Discount qiymatini saqlab qolamiz
+      discount = getPromoCode.discount;
     }
 
+    // Jami narxni hisoblash
     const totalPrice =
       items.reduce((total, item) => {
         return total + item.dish.price * item.quantity;
-      }, 0) - getPromoCode.discount;
+      }, 0) - discount;
 
+    // Waiterni band qilish
     const waiterUpdate = await waiterModel.findByIdAndUpdate(waiter.id, {
       $set: { busy: true },
     });
@@ -114,14 +125,19 @@ exports.waiterCreateOrder = async (req, res) => {
       return res.status(500).json({ error: "Waiterni yangilashda xatolik" });
     }
 
+    // Buyurtmani yaratish
     const order = await orderModel.create({ ...req.body, totalPrice });
     if (!order) {
       return res.status(400).json({ error: "Buyurtma berishda xatolik ketdi" });
     }
-    const currentCode = await promoCodeModel.findOne({ code: promoCode });
-    await promoCodeModel.findByIdAndUpdate(currentCode._id, {
-      $set: { worked: true, workedBy: order._id },
-    });
+
+    // Promo kodni ishlatilgan deb belgilash
+    if (promoCode) {
+      await promoCodeModel.findByIdAndUpdate(getPromoCode._id, {
+        $set: { worked: true, workedBy: order._id },
+      });
+    }
+
     res.json(order);
   } catch (error) {
     console.error("Xatolik:", error);
