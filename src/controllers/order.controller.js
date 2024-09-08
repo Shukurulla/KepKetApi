@@ -118,7 +118,10 @@ exports.waiterCreateOrder = async (req, res) => {
     if (!order) {
       return res.status(400).json({ error: "Buyurtma berishda xatolik ketdi" });
     }
-
+    const currentCode = await promoCodeModel.findOne({ code: promoCode });
+    await promoCodeModel.findByIdAndUpdate(currentCode._id, {
+      $set: { worked: true },
+    });
     res.json(order);
   } catch (error) {
     console.error("Xatolik:", error);
