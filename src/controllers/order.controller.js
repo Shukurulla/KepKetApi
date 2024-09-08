@@ -90,33 +90,48 @@ exports.waiterCreateOrder = async (req, res) => {
       return res.status(400).json({ message: "Restoran topilmadi" });
     }
 
+    // Stolni tekshirish
     const table = await tableModel.findById(tableNumber.id);
     if (!table) {
       return res.status(400).json({ message: "Bunday stol topilmadi" });
     }
+
+    // Promokodni tekshirish
     const getPromoCode = await promoCodeModel.findById(promoCode);
     if (!getPromoCode) {
       return res.status(400).json({ message: "Bunday PromoCode topilmadi" });
     }
     if (getPromoCode.worked) {
-      throw res.status(400).json({ error: "Bu promokod ishlatiglan" });
+      return res.status(400).json({ error: "Bu promokod ishlatilgan" });
     }
 
+    // Jami narxni hisoblash
     const totalPrice =
       items.reduce((total, item) => {
         return total + item.dish.price * item.quantity;
       }, 0) - getPromoCode.discount;
 
-    await waiterModel.findByIdAndUpdate(waiter.id, {
+    // Waiterni band qilish
+    const waiterUpdate = await waiterModel.findByIdAndUpdate(waiter.id, {
       $set: { busy: true },
     });
-    const order = await orderModel.create({ ...req.body, totalPrice });
-    if (!order) {
-      res.status(400).json({ error: "Buyurtma berishda hatolik ketti" });
+    if (!waiterUpdate) {
+      return res.status(500).json({ error: "Waiterni yangilashda xatolik" });
     }
 
+    // Buyurtmani yaratish
+    const order = await orderModel.create({ ...req.body, totalPrice });
+    if (!order) {
+      return res.status(400).json({ error: "Buyurtma berishda xatolik ketdi" });
+    }
+
+    // Javob qaytarish
     res.json(order);
-  } catch (error) {}
+  } catch (error) {
+    // Xatolarni ushlab qolish va qaytarish
+    console.error("Xatolik:", error);
+    res.status(500).json({ error: "Ichki server xatoligi" });
+  }
 };
 
 // Barcha buyurtmalarni olish
