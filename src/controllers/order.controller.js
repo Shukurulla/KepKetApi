@@ -98,10 +98,14 @@ exports.waiterCreateOrder = async (req, res) => {
     if (!getPromoCode) {
       return res.status(400).json({ message: "Bunday PromoCode topilmadi" });
     }
+    if (getPromoCode.worked) {
+      throw res.status(400).json({ error: "Bu promokod ishlatiglan" });
+    }
 
-    const totalPrice = items.reduce((total, item) => {
-      return total + item.dish.price * item.quantity;
-    }, 0);
+    const totalPrice =
+      items.reduce((total, item) => {
+        return total + item.dish.price * item.quantity;
+      }, 0) - getPromoCode.discount;
 
     await waiterModel.findByIdAndUpdate(waiter.id, {
       $set: { busy: true },
