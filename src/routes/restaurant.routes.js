@@ -4,6 +4,7 @@ const restaurantController = require("../controllers/restaurant.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 const cors = require("cors");
 const { authenticateJWT } = require("../middlewares/profile.middleware");
+const restaurantModel = require("../models/restaurant.model");
 
 router.post("/", cors(), restaurantController.createRestaurant);
 router.post("/login", cors(), restaurantController.loginRestaurant);
@@ -27,7 +28,7 @@ router.post(
   cors(),
   restaurantController.addTable
 );
-router.get("/profile", authenticateJWT, (req, res) => {
-  res.json(req.user);
+router.get("/profile/", authMiddleware, (req, res) => {
+  console.log(req);
 });
 module.exports = router;

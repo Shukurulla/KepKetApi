@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 const restaurantModel = require("../models/restaurant.model");
-
-exports.authenticateJWT = (req, res, next) => {
+exports.authenticateJWT = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (authHeader) {

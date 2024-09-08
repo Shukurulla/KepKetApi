@@ -20,7 +20,10 @@ const notificationSchema = new mongoose.Schema(
         required: true,
       },
     },
-
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
     meals: {
       type: Object,
       required: true,
