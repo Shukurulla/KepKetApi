@@ -29,6 +29,7 @@ exports.createOrder = async (req, res) => {
 
     let finalPrice = totalPrice;
 
+    // Check and apply promo code if provided
     if (promoCode) {
       const getPromoCode = await promoCodeModel.findById(promoCode);
       if (!getPromoCode)
@@ -38,7 +39,30 @@ exports.createOrder = async (req, res) => {
         return res.status(400).json({ message: "Bu kod oldin ishlatilgan" });
 
       finalPrice -= getPromoCode.discount || 0;
+    }
 
+    // Create the order
+    const order = new Order({
+      restaurantId,
+      tableNumber,
+      items,
+      totalPrice: finalPrice,
+      promoCode: promoCode || null,
+      waiter: { id: null }, // Temporarily set waiter to null
+    });
+
+    await order.save();
+
+    // Find available waiters and assign one to the order
+    const waiters = await waiterModel.find({ restaurantId, busy: false });
+    if (waiters.length > 0) {
+      const randomWaiter = waiters[Math.floor(Math.random() * waiters.length)];
+      order.waiter.id = randomWaiter._id;
+      await order.save(); // Update the order with the assigned waiter
+    }
+
+    // Update the promo code status if used
+    if (promoCode) {
       await promoCodeModel.findByIdAndUpdate(
         promoCode,
         {
@@ -48,21 +72,7 @@ exports.createOrder = async (req, res) => {
       );
     }
 
-    const waiters = await waiterModel.find({ restaurantId, busy: false });
-    const randomWaiter = waiters[Math.floor(Math.random() * waiters.length)];
-
-    const order = new Order({
-      restaurantId,
-      tableNumber,
-      items,
-      totalPrice: finalPrice,
-      promoCode: promoCode || null,
-      waiter: { id: randomWaiter._id },
-    });
-
-    await order.save();
     logger.info(`Yangi buyurtma yaratildi: ${order._id}`);
-
     return res.status(201).json(order);
   } catch (error) {
     logger.error("Buyurtma yaratishda xatolik:", error);
