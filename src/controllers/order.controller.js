@@ -10,7 +10,6 @@ const tableModel = require("../models/table.model");
 const promoCodeModel = require("../models/promoCode.model");
 const waiterModel = require("../models/waiter.model");
 const orderModel = require("../models/order.model");
-
 exports.createOrder = async (req, res) => {
   try {
     const { restaurantId, totalPrice, tableNumber, items, promoCode } =
