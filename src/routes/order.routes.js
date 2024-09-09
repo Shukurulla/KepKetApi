@@ -14,5 +14,6 @@ router.post(
 router.get("/:id", orderController.getOrderById);
 router.put("/:id", authMiddleware, orderController.updateOrder);
 router.delete("/:id", authMiddleware, orderController.deleteOrder);
+router.get("/waiter-order/:id", orderController.waiterOrders);
 
 module.exports = router;

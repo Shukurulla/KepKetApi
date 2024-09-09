@@ -11,32 +11,44 @@ const promoCodeModel = require("../models/promoCode.model");
 const waiterModel = require("../models/waiter.model");
 const orderModel = require("../models/order.model");
 
-// Yangi buyurtma yaratish
 exports.createOrder = async (req, res) => {
   try {
     const { restaurantId, totalPrice, tableNumber, items, promoCode } =
       req.body;
 
-    // Input validatsiyasi
     const { error } = validateOrderInput(req.body);
-    if (error) {
+    if (error)
       return res.status(400).json({ message: error.details[0].message });
-    }
 
-    // Restoranni tekshirish
     const restaurant = await Restaurant.findById(restaurantId);
-    if (!restaurant) {
+    if (!restaurant)
       return res.status(400).json({ message: "Restoran topilmadi" });
-    }
 
     const table = await tableModel.findById(tableNumber.id);
-    if (!table) {
+    if (!table)
       return res.status(400).json({ message: "Bunday stol topilmadi" });
+
+    let finalPrice = totalPrice;
+
+    if (promoCode) {
+      const getPromoCode = await promoCodeModel.findById(promoCode);
+      if (!getPromoCode)
+        return res.status(400).json({ message: "Bunday PromoCode topilmadi" });
+
+      if (getPromoCode.worked)
+        return res.status(400).json({ message: "Bu kod oldin ishlatilgan" });
+
+      finalPrice -= getPromoCode.discount || 0;
+
+      await promoCodeModel.findByIdAndUpdate(
+        promoCode,
+        {
+          $set: { worked: true, workedBy: order._id },
+        },
+        { new: true }
+      );
     }
-    const getPromoCode = await promoCodeModel.findById(promoCode);
-    if (!getPromoCode) {
-      return res.status(400).json({ message: "Bunday PromoCode topilmadi" });
-    }
+
     const waiters = await waiterModel.find();
     const equalWaiter = waiters.filter((c) => c.restaurantId == restaurantId);
     const freeWaiters = equalWaiter.filter((c) => c.busy == false);
@@ -47,33 +59,18 @@ exports.createOrder = async (req, res) => {
       restaurantId,
       tableNumber,
       items,
-      totalPrice,
+      totalPrice: finalPrice,
       promoCode,
-      waiter: randomWaiter,
+      waiter: { id: randomWaiter._id },
     });
-
-    if (order) {
-      await promoCodeModel.findByIdAndUpdate(
-        promoCode,
-        {
-          $set: {
-            worked: true,
-            workedBy: order._id,
-          },
-        },
-        {
-          new: true,
-        }
-      );
-    }
 
     await order.save();
     logger.info(`Yangi buyurtma yaratildi: ${order._id}`);
 
-    res.status(201).json(order);
+    return res.status(201).json(order);
   } catch (error) {
     logger.error("Buyurtma yaratishda xatolik:", error);
-    res.status(500).json({
+    return res.status(500).json({
       message: "Buyurtma yaratishda xatolik yuz berdi",
       error: error.message,
     });
@@ -288,5 +285,22 @@ exports.getOrderStatistics = async (req, res) => {
       message: "Statistika olishda xatolik yuz berdi",
       error: error.message,
     });
+  }
+};
+exports.waiterOrders = async (req, res, next) => {
+  try {
+    const findOrders = await orderModel.find();
+    const currentWaiterOrders = findOrders.filter(
+      (c) => c.waiter.id === req.params.id
+    );
+    if (!currentWaiterOrders) {
+      return res
+        .status(400)
+        .json({ error: "Bunday ofitsiyntning buyurtmasi topilmadi" });
+    }
+    res.status(200).json(currentWaiterOrders);
+  } catch (error) {
+    res.status(400).json({ error: error.message0 });
+    next();
   }
 };

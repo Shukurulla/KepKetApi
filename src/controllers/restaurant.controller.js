@@ -27,23 +27,33 @@ exports.createRestaurant = async (req, res) => {
 exports.loginRestaurant = async (req, res, next) => {
   try {
     const { password, name } = req.body;
-    const restaurant = await restaurantModel.find({ name });
-    if (!restaurant || !(await bcrypt.compare(password, restaurant.password))) {
+    const restaurant = await restaurantModel.findOne({ name });
+
+    if (!restaurant) {
       return res
         .status(401)
-        .json({ message: "Notogri restoran nomi yoki parol" });
+        .json({ message: "Notog'ri restoran nomi yoki parol" });
     }
+
+    const isPasswordMatch = await bcrypt.compare(password, restaurant.password);
+    if (!isPasswordMatch) {
+      return res
+        .status(401)
+        .json({ message: "Notog'ri restoran nomi yoki parol" });
+    }
+
     const token = jwt.sign(
       { userId: restaurant._id, role: restaurant.role },
       config.jwtSecret,
       { expiresIn: "30d" }
     );
-    res.status(200).json({ data: restaurant, token });
+
+    return res.status(200).json({ data: restaurant, token }); // Bu yerda `return` ishlatildi
   } catch (error) {
-    res.status(400).json({ error: error.message });
-    next();
+    return res.status(400).json({ error: error.message }); // Bu yerda ham `return` ishlatildi
   }
 };
+
 // Barcha restoranlarni olish
 exports.getAllRestaurants = async (req, res) => {
   try {
