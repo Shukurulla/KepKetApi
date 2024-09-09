@@ -43,10 +43,18 @@ exports.createOrder = async (req, res) => {
 
     // Find available waiters and assign one to the order
     const waiters = await waiterModel.find({ restaurantId, busy: false });
-    let assignedWaiter = null;
+    let assignedWaiterId = null;
 
     if (waiters.length > 0) {
-      assignedWaiter = waiters[Math.floor(Math.random() * waiters.length)];
+      const randomWaiter = waiters[Math.floor(Math.random() * waiters.length)];
+      assignedWaiterId = randomWaiter._id;
+
+      // Mark the assigned waiter as busy
+      await waiterModel.findByIdAndUpdate(
+        randomWaiter._id,
+        { busy: true },
+        { new: true }
+      );
     }
 
     // Create the order with the assigned waiter (if any)
@@ -56,19 +64,10 @@ exports.createOrder = async (req, res) => {
       items,
       totalPrice: finalPrice,
       promoCode: promoCode || null,
-      waiter: assignedWaiter ? { id: assignedWaiter._id } : { id: null },
+      waiter: { id: assignedWaiterId }, // Set the waiter ID here
     });
 
     await order.save();
-
-    // Mark the assigned waiter as busy if one was assigned
-    if (assignedWaiter) {
-      await waiterModel.findByIdAndUpdate(
-        assignedWaiter._id,
-        { busy: true },
-        { new: true }
-      );
-    }
 
     // Update the promo code status if used
     if (promoCode) {
