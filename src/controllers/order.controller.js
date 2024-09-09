@@ -49,18 +49,15 @@ exports.createOrder = async (req, res) => {
       );
     }
 
-    const waiters = await waiterModel.find();
-    const equalWaiter = waiters.filter((c) => c.restaurantId == restaurantId);
-    const freeWaiters = equalWaiter.filter((c) => c.busy == false);
-    const randomWaiter =
-      freeWaiters[Math.floor(Math.random() * freeWaiters.length)];
+    const waiters = await waiterModel.find({ restaurantId, busy: false });
+    const randomWaiter = waiters[Math.floor(Math.random() * waiters.length)];
 
     const order = new Order({
       restaurantId,
       tableNumber,
       items,
-      totalPrice,
-      promoCode,
+      totalPrice: finalPrice,
+      promoCode: promoCode || null,
       waiter: { id: randomWaiter._id },
     });
 

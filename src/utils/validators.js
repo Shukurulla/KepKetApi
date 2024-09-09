@@ -17,7 +17,6 @@ const orderInputSchema = Joi.object({
 
   status: Joi.string().required(),
   totalPrice: Joi.number().required(),
-  promoCode: Joi.string(),
 });
 
 // Order status validation schema
