@@ -45,17 +45,16 @@ exports.createOrder = async (req, res) => {
     const waiters = await waiterModel.find({ restaurantId, busy: false });
     let assignedWaiterId = null;
 
-    if (waiters.length > 0) {
-      const randomWaiter = waiters[Math.floor(Math.random() * waiters.length)];
-      assignedWaiterId = randomWaiter._id;
+    const randomWaiter =
+      waiters && waiters[Math.floor(Math.random() * waiters.length)];
+    assignedWaiterId = randomWaiter && randomWaiter._id;
 
-      // Mark the assigned waiter as busy
-      await waiterModel.findByIdAndUpdate(
-        randomWaiter._id,
-        { busy: true },
-        { new: true }
-      );
-    }
+    // Mark the assigned waiter as busy
+    await waiterModel.findByIdAndUpdate(
+      randomWaiter._id,
+      { busy: true },
+      { new: true }
+    );
 
     // Create the order with the assigned waiter (if any)
     const order = new Order({
