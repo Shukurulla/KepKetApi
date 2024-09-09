@@ -30,16 +30,12 @@ exports.loginRestaurant = async (req, res, next) => {
     const restaurant = await restaurantModel.findOne({ name });
 
     if (!restaurant) {
-      return res
-        .status(401)
-        .json({ message: "Notog'ri restoran nomi yoki parol" });
+      return res.status(401).json({ message: "Notog'ri restoran nomi" });
     }
 
     const isPasswordMatch = await bcrypt.compare(password, restaurant.password);
     if (!isPasswordMatch) {
-      return res
-        .status(401)
-        .json({ message: "Notog'ri restoran nomi yoki parol" });
+      return res.status(401).json({ message: "Notog'ri  parol" });
     }
 
     const token = jwt.sign(
@@ -71,10 +67,17 @@ exports.getAllRestaurants = async (req, res) => {
 exports.getRestaurantById = async (req, res) => {
   try {
     const restaurant = await Restaurant.findById(req.params.id);
+    console.log(req.params.id);
+
     if (!restaurant) {
       return res.status(404).json({ message: "Restoran topilmadi" });
     }
-    res.json(restaurant);
+    const token = jwt.sign(
+      { userId: restaurant._id, role: restaurant.role },
+      config.jwtSecret,
+      { expiresIn: "30d" }
+    );
+    res.status(201).json({ restaurant, token });
   } catch (error) {
     res.status(500).json({
       message: "Restorani olishda xatolik yuz berdi",
