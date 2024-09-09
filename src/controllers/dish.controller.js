@@ -29,7 +29,7 @@ exports.getAllDishes = async (req, res, next) => {
 exports.getDish = async (req, res, next) => {
   console.log(req.params.id);
   try {
-    const dish = await Dish.find();
+    const dish = await Dish.findById(req.params.id);
 
     if (!dish) return res.status(404).json({ message: "Taom topilmadi" });
     res.json(dish);
