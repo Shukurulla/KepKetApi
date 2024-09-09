@@ -59,7 +59,7 @@ exports.createOrder = async (req, res) => {
       restaurantId,
       tableNumber,
       items,
-      totalPrice: finalPrice,
+      totalPrice,
       promoCode,
       waiter: { id: randomWaiter._id },
     });
