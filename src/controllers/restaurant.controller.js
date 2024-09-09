@@ -44,7 +44,7 @@ exports.loginRestaurant = async (req, res, next) => {
       { expiresIn: "30d" }
     );
 
-    return res.status(200).json({ data: restaurant, token }); // Bu yerda `return` ishlatildi
+    return res.status(200).json({ restaurant, token }); // Bu yerda `return` ishlatildi
   } catch (error) {
     return res.status(400).json({ error: error.message }); // Bu yerda ham `return` ishlatildi
   }
