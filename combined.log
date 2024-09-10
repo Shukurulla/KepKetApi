@@ -1285,3 +1285,5 @@
 {"level":"info","message":"Yangi buyurtma yaratildi: 66def76b27497aee4788bc51","service":"restaurant-automation"}
 {"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
 {"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
+{"level":"info","message":"Server 3001 portda ishga tushdi","service":"restaurant-automation"}
+{"level":"info","message":"MongoDB ga muvaffaqiyatli ulandi","service":"restaurant-automation"}
