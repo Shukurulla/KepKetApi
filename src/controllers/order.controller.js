@@ -10,6 +10,7 @@ const tableModel = require("../models/table.model");
 const promoCodeModel = require("../models/promoCode.model");
 const waiterModel = require("../models/waiter.model");
 const orderModel = require("../models/order.model");
+
 exports.createOrder = async (req, res) => {
   try {
     const { restaurantId, totalPrice, tableNumber, items, promoCode } =
@@ -56,7 +57,9 @@ exports.createOrder = async (req, res) => {
       items,
       totalPrice: finalPrice,
       promoCode: promoCode || null,
-      waiter: assignedWaiter ? { id: assignedWaiter._id } : { id: null },
+      waiter: assignedWaiter
+        ? { id: assignedWaiter._id, name: assignedWaiter.username }
+        : { id: null },
     });
 
     await order.save();
