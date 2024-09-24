@@ -49,7 +49,10 @@ exports.createOrder = async (req, res) => {
     if (waiters.length > 0) {
       assignedWaiter = waiters[Math.floor(Math.random() * waiters.length)];
     }
-
+    if (assignedWaiter == null) {
+      const waiters = await waiterModel.find();
+      assignedWaiter = waiters[Math.floor(Math.random() * waiters.length)];
+    }
     // Create the order with the assigned waiter (if any)
     const order = new Order({
       restaurantId,
