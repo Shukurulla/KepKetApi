@@ -5,15 +5,17 @@ const waiterModel = require("../models/waiter.model");
 
 exports.createaNotification = async (req, res, next) => {
   try {
-    const notification = await notificationModel.create(req.body);
     const { orderId, meals } = req.body;
+    const findOrder = await orderModel.findById(orderId);
+    const filterMeals = findOrder.prepared.filter((c) => c.id !== meals);
+    const notification = await notificationModel.create(req.body);
 
     if (!orderId) {
       return res.status(400).json({ message: "Order ID topilmadi" });
     }
 
     await orderModel.findByIdAndUpdate(orderId, {
-      prepared: meals,
+      prepared: findOrder.prepared.concat(meals),
     });
 
     if (notification) {
