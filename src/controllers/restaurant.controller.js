@@ -25,6 +25,8 @@ exports.createRestaurant = async (req, res) => {
   }
 };
 exports.loginRestaurant = async (req, res, next) => {
+  console.log(req.body);
+
   try {
     const { password, name } = req.body;
     const restaurant = await restaurantModel.findOne({ name });

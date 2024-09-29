@@ -26,6 +26,10 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: "Client",
     },
+    prepared: {
+      type: Object,
+      default: [],
+    },
     waiter: { type: Object, ref: "User" },
   },
   { timestamps: true }

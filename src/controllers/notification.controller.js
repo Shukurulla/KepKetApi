@@ -6,9 +6,19 @@ const waiterModel = require("../models/waiter.model");
 exports.createaNotification = async (req, res, next) => {
   try {
     const notification = await notificationModel.create(req.body);
+    const { orderId, meals } = req.body;
+
+    if (!orderId) {
+      return res.status(400).json({ message: "Order ID topilmadi" });
+    }
+
+    await orderModel.findByIdAndUpdate(orderId, {
+      $push: { prepared: meals },
+    });
+
     if (notification) {
       await waiterModel.findByIdAndUpdate(
-        notification.waiter,
+        notification.waiter.id,
         {
           $set: { busy: true },
         },

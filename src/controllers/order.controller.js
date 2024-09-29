@@ -98,6 +98,8 @@ exports.createOrder = async (req, res) => {
   }
 };
 
+
+
 exports.waiterCreateOrder = async (req, res) => {
   try {
     const { restaurantId, waiter, tableNumber, items, promoCode } = req.body;
