@@ -13,7 +13,7 @@ exports.createaNotification = async (req, res, next) => {
     }
 
     await orderModel.findByIdAndUpdate(orderId, {
-      $push: { prepared: meals },
+      prepared: meals,
     });
 
     if (notification) {
