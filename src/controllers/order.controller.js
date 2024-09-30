@@ -71,7 +71,7 @@ exports.createOrder = async (req, res) => {
     if (assignedWaiter) {
       await waiterModel.findByIdAndUpdate(
         assignedWaiter._id,
-        { busy: true },
+        { busy: true, $push: { numberOfService: order } },
         { new: true }
       );
     }
@@ -97,8 +97,6 @@ exports.createOrder = async (req, res) => {
     });
   }
 };
-
-
 
 exports.waiterCreateOrder = async (req, res) => {
   try {
