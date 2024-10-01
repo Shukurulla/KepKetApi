@@ -43,7 +43,9 @@ router.get("/waiters-info", authMiddleware, async (req, res) => {
     const waiterService = countWaiters(shortOrders);
 
     res.json(waiterService);
-  } catch (error) {}
+  } catch (error) {
+    res.json({ message: error.message });
+  }
 });
 router.get("/:id", waiterController.getWaiterById);
 router.post("/", authMiddleware, waiterController.createWaiter);
