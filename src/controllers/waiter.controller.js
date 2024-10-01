@@ -3,6 +3,7 @@ const waiterModel = require("../models/waiter.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
+const orderModel = require("../models/order.model.js");
 
 exports.createWaiter = async (req, res, next) => {
   try {

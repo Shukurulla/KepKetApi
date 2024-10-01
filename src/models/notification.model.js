@@ -7,10 +7,6 @@ const notificationSchema = new mongoose.Schema(
       required: true,
     },
     waiter: {
-      type: Object,
-      required: true,
-    },
-    waiter: {
       id: {
         type: String,
         required: true,

@@ -1,5 +1,5 @@
 const Restaurant = require("../models/restaurant.model");
-const config = require("../config/config");
+const config = require("../config/config.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const restaurantModel = require("../models/restaurant.model");
@@ -25,8 +25,6 @@ exports.createRestaurant = async (req, res) => {
   }
 };
 exports.loginRestaurant = async (req, res, next) => {
-  console.log(req.body);
-
   try {
     const { password, name } = req.body;
     const restaurant = await restaurantModel.findOne({ name });

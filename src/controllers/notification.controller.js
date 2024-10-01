@@ -67,6 +67,7 @@ exports.getAllNotification = async (req, res, next) => {
     next();
   }
 };
+
 exports.getMyNotification = async (req, res, next) => {
   try {
     const notifications = await notificationModel.find();
@@ -76,13 +77,23 @@ exports.getMyNotification = async (req, res, next) => {
     const pendingNotifications = myNotifications.filter(
       (c) => c.status == "Pending"
     );
+    const complatedNotifications = myNotifications.filter(
+      (c) => c.status == "complate"
+    );
     if (!myNotifications) {
       return res
         .status(400)
-        .json({ error: "Notification yaratishda xatolik yuz berdi" });
+        .json({ message: "Sizning notificationlaringiz topilmadi" });
     }
-    res.status(200).json(pendingNotifications);
-  } catch (error) {}
+    res
+      .status(200)
+      .json({
+        pending: pendingNotifications,
+        complate: complatedNotifications,
+      });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 exports.getNotification = async (req, res, next) => {
   try {
