@@ -30,7 +30,13 @@ const orderSchema = new mongoose.Schema(
       type: Object,
       default: [],
     },
-    waiter: { type: Object, ref: "User" },
+    // Hozirgi obyekt o'rniga, waiter faqat ID bo'lishi kerak
+    waiter: {
+      name: {
+        type: String,
+      },
+      id: { type: mongoose.Schema.Types.ObjectId },
+    },
   },
   { timestamps: true }
 );

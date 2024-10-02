@@ -12,41 +12,85 @@ router.get("/all/:id", waiterController.getWaiters);
 router.get("/waiters-info", authMiddleware, async (req, res) => {
   const { userId } = req.userData;
   try {
-    const findOrders = await orderModel.find({ restaurantId: userId });
+    console.log("Restaurant ID: ", userId); // Restaurant ID ni tekshirish uchun
+
+    // Barcha ofitsiantlarni olish
+    const allWaiters = await waiterModel.find({ restaurantId: userId });
+
+    console.log("Topilgan waiterlar soni: ", allWaiters.length); // Barcha ofitsiantlarni tekshirish uchun
+
+    // Buyurtmalarni topish va waiter obyektini populate qilish
+    const findOrders = await orderModel
+      .find({ restaurantId: userId })
+      .populate("waiter");
+
+    console.log("Buyurtmalar topildi: ", findOrders.length); // Buyurtmalar sonini ko'rish
+
+    // Buyurtmalardan waiter va order ma'lumotlarini olish
     const shortOrders = findOrders.map((c) => {
-      const data = {
+      return {
         order: c._id,
-        waiter: c.waiter.id,
+        waiter: c.waiter ? c.waiter.id.toString() : null, // Waiter mavjudligini tekshirish
       };
-      return data;
     });
 
+    console.log("Short Orders: ", shortOrders); // Tekshirish uchun
+
+    // Funksiya: waiterlar bo'yicha buyurtmalarni guruhlash
     function countWaiters(orders) {
       const result = {};
 
       orders.forEach((order) => {
-        const waiter = order.waiter;
-        if (result[waiter]) {
-          result[waiter].count += 1;
+        const waiterId = order.waiter;
+        if (!waiterId) return; // Waiter mavjud bo'lmasa o'tkazib yuborish
+
+        if (result[waiterId]) {
+          result[waiterId].orders.push(order.order);
+          result[waiterId].count += 1;
         } else {
-          result[waiter] = {
-            waiter: waiter,
+          result[waiterId] = {
+            waiter: waiterId,
             count: 1,
+            orders: [order.order], // Buyurtmalar ro'yxati
           };
         }
       });
 
-      // Massivga o'zgartirish
+      // Resultni massiv ko'rinishiga o'tkazish
       return Object.values(result);
     }
 
+    // Orderlarni guruhlash
     const waiterService = countWaiters(shortOrders);
 
-    res.json(waiterService);
+    console.log("Waiter Service: ", waiterService); // Tekshirish uchun
+
+    // Har bir waiter haqida batafsil ma'lumot olish
+    const detailedWaiters = await Promise.all(
+      allWaiters.map(async (waiter) => {
+        const waiterData = waiterService.find(
+          (w) => w.waiter === waiter._id.toString()
+        );
+        return {
+          waiterId: waiter._id,
+          name: waiter.username,
+          imageWaiter: waiter.imageWaiter,
+          rating: waiter.rating,
+          atWork: waiter.atWork,
+          busy: waiter.busy,
+          orderCount: waiterData ? waiterData.count : 0, // Agar buyurtma bo'lmasa, 0
+          orders: waiterData ? waiterData.orders : [], // Agar buyurtma bo'lmasa, bo'sh massiv
+        };
+      })
+    );
+
+    // Javobni qaytarish
+    res.json(detailedWaiters);
   } catch (error) {
-    res.json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
+
 router.get("/:id", waiterController.getWaiterById);
 router.post("/", authMiddleware, waiterController.createWaiter);
 router.post("/login", waiterController.loginWaiter);
