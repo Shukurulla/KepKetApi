@@ -63,7 +63,7 @@ exports.createOrder = async (req, res) => {
     if (findOrder) {
       await orderModel.findByIdAndUpdate(findOrder._id, {
         $push: { items: { items } },
-        totalPrice: finalPrice,
+        totalPrice: findOrder.totalPrice + totalPrice,
       });
     }
 
