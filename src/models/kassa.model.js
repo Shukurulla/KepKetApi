@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const kassaSchema = new mongoose.Schema(
   {
+    orderId: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+    },
     table: {
       number: {
         type: String,
@@ -33,6 +37,10 @@ const kassaSchema = new mongoose.Schema(
     forWaiter: {
       type: Number,
       requried: true,
+    },
+    restaurantId: {
+      type: mongoose.Types.ObjectId,
+      required: true,
     },
     paymentType: {
       type: String,

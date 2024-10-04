@@ -85,12 +85,14 @@ exports.getMyNotification = async (req, res, next) => {
         .status(400)
         .json({ message: "Sizning notificationlaringiz topilmadi" });
     }
-    res
-      .status(200)
-      .json({
-        pending: pendingNotifications,
-        complate: complatedNotifications,
-      });
+    res.status(200).json({
+      pending: pendingNotifications.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      ),
+      complate: complatedNotifications.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      ),
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

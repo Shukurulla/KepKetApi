@@ -22,7 +22,9 @@ exports.createDish = async (req, res, next) => {
 exports.getAllDishes = async (req, res, next) => {
   try {
     const dishes = await Dish.find({ restourantId: req.params.id });
-    res.json(dishes);
+    res.json(
+      dishes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    );
   } catch (error) {
     next(error);
   }

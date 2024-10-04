@@ -88,7 +88,7 @@ exports.createOrder = async (req, res) => {
       if (assignedWaiter) {
         await waiterModel.findByIdAndUpdate(
           assignedWaiter._id,
-          { busy: true, $push: { numberOfService: order } },
+          { busy: true },
           { new: true }
         );
       }
@@ -186,7 +186,11 @@ exports.getAllOrders = async (req, res) => {
   try {
     const orders = await orderModel.find();
     const filtered = orders.filter((c) => c.restaurantId == req.params.id);
-    res.status(200).json(filtered);
+    res
+      .status(200)
+      .json(
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      );
   } catch (error) {
     logger.error("Buyurtmalarni olishda xatolik:", error);
     res.status(500).json({

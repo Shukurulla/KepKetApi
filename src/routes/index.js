@@ -15,6 +15,7 @@ const restaurantRoutes = require("./restaurant.routes");
 const tableRoutes = require("./table.routes");
 const categoryRoutes = require("./category.routes");
 const waiterRoutes = require("./waiter.routes");
+const KassaRoutes = require("./kassa.routes.js");
 
 // Route'larni ro'yxatdan o'tkazish funksiyasi
 const registerRoute = (path, routeModule) => {
@@ -67,6 +68,9 @@ try {
 
   // Waiter Routes
   registerRoute("/waiter", waiterRoutes);
+
+  // Kassa Routes
+  registerRoute("/kassa/", KassaRoutes);
 } catch (error) {
   console.error("Error setting up routes:", error);
 }

@@ -12,19 +12,13 @@ router.get("/all/:id", waiterController.getWaiters);
 router.get("/waiters-info", authMiddleware, async (req, res) => {
   const { userId } = req.userData;
   try {
-    console.log("Restaurant ID: ", userId); // Restaurant ID ni tekshirish uchun
-
     // Barcha ofitsiantlarni olish
     const allWaiters = await waiterModel.find({ restaurantId: userId });
-
-    console.log("Topilgan waiterlar soni: ", allWaiters.length); // Barcha ofitsiantlarni tekshirish uchun
 
     // Buyurtmalarni topish va waiter obyektini populate qilish
     const findOrders = await orderModel
       .find({ restaurantId: userId })
       .populate("waiter");
-
-    console.log("Buyurtmalar topildi: ", findOrders.length); // Buyurtmalar sonini ko'rish
 
     // Buyurtmalardan waiter va order ma'lumotlarini olish
     const shortOrders = findOrders.map((c) => {
@@ -33,8 +27,6 @@ router.get("/waiters-info", authMiddleware, async (req, res) => {
         waiter: c.waiter ? c.waiter.id.toString() : null, // Waiter mavjudligini tekshirish
       };
     });
-
-    console.log("Short Orders: ", shortOrders); // Tekshirish uchun
 
     // Funksiya: waiterlar bo'yicha buyurtmalarni guruhlash
     function countWaiters(orders) {
@@ -62,8 +54,6 @@ router.get("/waiters-info", authMiddleware, async (req, res) => {
 
     // Orderlarni guruhlash
     const waiterService = countWaiters(shortOrders);
-
-    console.log("Waiter Service: ", waiterService); // Tekshirish uchun
 
     // Har bir waiter haqida batafsil ma'lumot olish
     const detailedWaiters = await Promise.all(
