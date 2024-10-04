@@ -27,12 +27,7 @@ const WaiterSchema = mongoose.Schema(
     numberOfService: {
       type: Object,
     },
-    createdAt: {
-      type: Date,
-    },
-    updatedAt: {
-      type: Date,
-    },
+
     notification: {
       type: Object,
       default: [],

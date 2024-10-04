@@ -54,6 +54,19 @@ exports.createOrder = async (req, res) => {
       assignedWaiter = waiters[Math.floor(Math.random() * waiters.length)];
     }
     // Create the order with the assigned waiter (if any)
+
+    const findOrder = await orderModel.findOne({
+      "tableNumber.id": tableNumber.id,
+      payment: false,
+    });
+
+    if (findOrder) {
+      await orderModel.findByIdAndUpdate(findOrder._id, {
+        $push: { items: { items } },
+        totalPrice: finalPrice,
+      });
+    }
+
     const order = new Order({
       restaurantId,
       tableNumber,
