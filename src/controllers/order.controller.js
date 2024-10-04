@@ -61,47 +61,46 @@ exports.createOrder = async (req, res) => {
     });
 
     if (findOrder) {
-      await orderModel.findByIdAndUpdate(findOrder._id, {
-        $push: { items: { items } },
+      const order = await orderModel.findByIdAndUpdate(findOrder._id, {
+        items: findOrder.items.concat(items),
         totalPrice: findOrder.totalPrice + totalPrice,
       });
+      return res.json(order);
+    } else {
+      const order = new Order({
+        restaurantId,
+        tableNumber,
+        items,
+        totalPrice: finalPrice,
+        promoCode: promoCode || null,
+        waiter: assignedWaiter
+          ? { id: assignedWaiter._id, name: assignedWaiter.username }
+          : { id: null },
+      });
+
+      await order.save();
+      if (assignedWaiter) {
+        await waiterModel.findByIdAndUpdate(
+          assignedWaiter._id,
+          { busy: true, $push: { numberOfService: order } },
+          { new: true }
+        );
+      }
+
+      // Update the promo code status if used
+      if (promoCode) {
+        await promoCodeModel.findByIdAndUpdate(
+          promoCode,
+          {
+            $set: { worked: true, workedBy: order._id },
+          },
+          { new: true }
+        );
+      }
+      return res.status(201).json(order);
     }
-
-    const order = new Order({
-      restaurantId,
-      tableNumber,
-      items,
-      totalPrice: finalPrice,
-      promoCode: promoCode || null,
-      waiter: assignedWaiter
-        ? { id: assignedWaiter._id, name: assignedWaiter.username }
-        : { id: null },
-    });
-
-    await order.save();
 
     // Mark the assigned waiter as busy if one was assigned
-    if (assignedWaiter) {
-      await waiterModel.findByIdAndUpdate(
-        assignedWaiter._id,
-        { busy: true, $push: { numberOfService: order } },
-        { new: true }
-      );
-    }
-
-    // Update the promo code status if used
-    if (promoCode) {
-      await promoCodeModel.findByIdAndUpdate(
-        promoCode,
-        {
-          $set: { worked: true, workedBy: order._id },
-        },
-        { new: true }
-      );
-    }
-
-    logger.info(`Yangi buyurtma yaratildi: ${order._id}`);
-    return res.status(201).json(order);
   } catch (error) {
     logger.error("Buyurtma yaratishda xatolik:", error);
     return res.status(500).json({
