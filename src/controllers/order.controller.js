@@ -61,10 +61,16 @@ exports.createOrder = async (req, res) => {
     });
 
     if (findOrder) {
-      const order = await orderModel.findByIdAndUpdate(findOrder._id, {
-        items: findOrder.items.concat(items),
-        totalPrice: findOrder.totalPrice + totalPrice,
-      });
+      const order = await orderModel.findByIdAndUpdate(
+        findOrder._id,
+        {
+          $set: {
+            items: findOrder.items.concat(items),
+            totalPrice: findOrder.totalPrice + totalPrice,
+          },
+        },
+        { new: true }
+      );
       return res.json(order);
     } else {
       const order = new Order({
