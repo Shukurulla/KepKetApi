@@ -9,6 +9,11 @@ router.post("/", authMiddleware, notificationRoute.createaNotification);
 router.put("/complate/:id", authMiddleware, notificationRoute.complate);
 router.get("/all/:id", notificationRoute.getAllNotification);
 router.get("/", authMiddleware, notificationRoute.getMyNotification);
+router.get(
+  "/complate",
+  authMiddleware,
+  notificationRoute.getMyComplateNotification
+);
 router.put("/:id", authMiddleware, notificationRoute.editNotification);
 router.delete("/:id", authMiddleware, notificationRoute.deleteNotification);
 router.get("/all-delete", async (req, res) => {

@@ -96,6 +96,33 @@ exports.getMyNotification = async (req, res, next) => {
       pending: pendingNotifications.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       ),
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+exports.getMyComplateNotification = async (req, res, next) => {
+  const { userId } = req.userData;
+  try {
+    const findWaiter = await waiterModel.findById(userId);
+    if (!findWaiter) {
+      return res.status(400).json({ message: "Bunday waiter topilmadi" });
+    }
+    const notifications = await notificationModel.find({
+      restaurantId: findWaiter.restaurantId,
+    });
+    const myNotifications = notifications.filter(
+      (c) => c.waiter.id == findWaiter._id
+    );
+    const complatedNotifications = myNotifications.filter(
+      (c) => c.status.toLowerCase() == "complate"
+    );
+    if (!myNotifications) {
+      return res
+        .status(400)
+        .json({ message: "Sizning notificationlaringiz topilmadi" });
+    }
+    res.status(200).json({
       complate: complatedNotifications.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       ),
