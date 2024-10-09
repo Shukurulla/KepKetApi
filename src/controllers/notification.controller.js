@@ -69,10 +69,17 @@ exports.getAllNotification = async (req, res, next) => {
 };
 
 exports.getMyNotification = async (req, res, next) => {
+  const { userId } = req.userData;
   try {
-    const notifications = await notificationModel.find();
+    const findWaiter = await waiterModel.findById(userId);
+    if (!findWaiter) {
+      return res.status(400).json({ message: "Bunday waiter topilmadi" });
+    }
+    const notifications = await notificationModel.find({
+      restaurantId: findWaiter.restaurantId,
+    });
     const myNotifications = notifications.filter(
-      (c) => c.waiter.id == req.params.id
+      (c) => c.waiter.id == findWaiter._id
     );
     const pendingNotifications = myNotifications.filter(
       (c) => c.status.toLowerCase() == "pending"

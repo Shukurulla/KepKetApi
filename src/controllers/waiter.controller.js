@@ -93,9 +93,10 @@ exports.getWaiters = async (req, res, next) => {
   }
 };
 exports.editWaiter = async (req, res, next) => {
+  const { userId } = req.userData;
   try {
     const waiter = await waiterModel.findByIdAndUpdate(
-      req.params.id,
+      userId,
       {
         $set: req.body,
       },

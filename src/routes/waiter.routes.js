@@ -84,7 +84,7 @@ router.get("/waiters-info", authMiddleware, async (req, res) => {
 router.get("/:id", waiterController.getWaiterById);
 router.post("/", authMiddleware, waiterController.createWaiter);
 router.post("/login", waiterController.loginWaiter);
-router.put("/:id", authMiddleware, waiterController.editWaiter);
+router.put("/", authMiddleware, waiterController.editWaiter);
 router.put("/edit-password/:id", authMiddleware, waiterController.editPassword);
 router.delete("/:id", authMiddleware, waiterController.deleteWaiter);
 
