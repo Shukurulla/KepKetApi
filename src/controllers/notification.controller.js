@@ -75,10 +75,10 @@ exports.getMyNotification = async (req, res, next) => {
       (c) => c.waiter.id == req.params.id
     );
     const pendingNotifications = myNotifications.filter(
-      (c) => c.status == "Pending"
+      (c) => c.status.toLowerCase() == "pending"
     );
     const complatedNotifications = myNotifications.filter(
-      (c) => c.status == "complate"
+      (c) => c.status.toLowerCase() == "complate"
     );
     if (!myNotifications) {
       return res
