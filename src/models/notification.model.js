@@ -20,10 +20,34 @@ const notificationSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    meals: {
-      type: Object,
-      required: true,
-    },
+    meals: [
+      {
+        foodImage: {
+          type: String,
+          required: true,
+        },
+        foodId: {
+          type: mongoose.Types.ObjectId,
+          required: true,
+        },
+        foodPrice: {
+          type: Number,
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+        foodName: {
+          type: String,
+          required: true,
+        },
+        mealId: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     status: {
       type: String,
       default: "Pending",

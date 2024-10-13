@@ -7,7 +7,6 @@ exports.createaNotification = async (req, res, next) => {
   try {
     const { orderId, meals } = req.body;
     const findOrder = await orderModel.findById(orderId);
-    const filterMeals = findOrder.prepared.filter((c) => c.id !== meals);
     const notification = await notificationModel.create(req.body);
 
     if (!orderId) {
@@ -83,9 +82,6 @@ exports.getMyNotification = async (req, res, next) => {
     );
     const pendingNotifications = myNotifications.filter(
       (c) => c.status.toLowerCase() == "pending"
-    );
-    const complatedNotifications = myNotifications.filter(
-      (c) => c.status.toLowerCase() == "complate"
     );
     if (!myNotifications) {
       return res

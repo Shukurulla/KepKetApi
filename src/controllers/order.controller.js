@@ -169,6 +169,7 @@ exports.waiterCreateOrder = async (req, res) => {
 
     // Promo kodni ishlatilgan deb belgilash
     if (promoCode) {
+      const getPromoCode = await promoCodeModel.findOne({ code: promoCode });
       await promoCodeModel.findByIdAndUpdate(getPromoCode._id, {
         $set: { worked: true, workedBy: order._id },
       });
