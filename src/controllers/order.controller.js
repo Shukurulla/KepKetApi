@@ -186,7 +186,9 @@ exports.waiterCreateOrder = async (req, res) => {
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await orderModel.find();
-    const filtered = orders.filter((c) => c.restaurantId == req.params.id);
+    const filtered = orders.filter(
+      (c) => c.restaurantId == req.params.id && c.showOrder == true
+    );
     res
       .status(200)
       .json(

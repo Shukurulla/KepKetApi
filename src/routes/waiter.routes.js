@@ -75,7 +75,7 @@ router.get("/waiters-info", authMiddleware, async (req, res) => {
     );
 
     // Javobni qaytarish
-    res.json(detailedWaiters);
+    res.json(detailedWaiters.sort((a, b) => b.orderCount - a.orderCount));
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

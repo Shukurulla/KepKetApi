@@ -50,6 +50,10 @@ const orderSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    showOrder: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
