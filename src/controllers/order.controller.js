@@ -183,12 +183,30 @@ exports.waiterCreateOrder = async (req, res) => {
 };
 
 // Barcha buyurtmalarni olish
-exports.getAllOrders = async (req, res) => {
+exports.getShowOrders = async (req, res) => {
   try {
     const orders = await orderModel.find();
     const filtered = orders.filter(
       (c) => c.restaurantId == req.params.id && c.showOrder == true
     );
+    res
+      .status(200)
+      .json(
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      );
+  } catch (error) {
+    logger.error("Buyurtmalarni olishda xatolik:", error);
+    res.status(500).json({
+      message: "Buyurtmalarni olishda xatolik yuz berdi",
+      error: error.message,
+    });
+  }
+};
+
+exports.getAllOrders = async (req, res) => {
+  try {
+    const orders = await orderModel.find();
+    const filtered = orders.filter((c) => c.restaurantId == req.params.id);
     res
       .status(200)
       .json(
