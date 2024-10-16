@@ -58,6 +58,7 @@ exports.createOrder = async (req, res) => {
     const findOrder = await orderModel.findOne({
       "tableNumber.id": tableNumber.id,
       payment: false,
+      showOrder: true,
     });
 
     if (findOrder) {
@@ -84,7 +85,7 @@ exports.createOrder = async (req, res) => {
           : { id: null },
       });
 
-      await order.save();
+      const create = await order.save();
       if (assignedWaiter) {
         await waiterModel.findByIdAndUpdate(
           assignedWaiter._id,
@@ -103,7 +104,7 @@ exports.createOrder = async (req, res) => {
           { new: true }
         );
       }
-      return res.status(201).json(order);
+      return res.status(201).json(create);
     }
 
     // Mark the assigned waiter as busy if one was assigned
@@ -185,10 +186,11 @@ exports.waiterCreateOrder = async (req, res) => {
 // Barcha buyurtmalarni olish
 exports.getShowOrders = async (req, res) => {
   try {
-    const orders = await orderModel.find();
-    const filtered = orders.filter(
-      (c) => c.restaurantId == req.params.id && c.showOrder == true
-    );
+    const orders = await orderModel.find({ restaurantId: req.params.id });
+
+    const filtered = orders.filter((c) => c.showOrder == true);
+    console.log(orders, filtered);
+
     res
       .status(200)
       .json(

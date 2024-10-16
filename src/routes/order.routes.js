@@ -6,7 +6,7 @@ const orderModel = require("../models/order.model.js");
 const router = express.Router();
 
 router.get("/all/:id", orderController.getAllOrders);
-router.get("/show/:id", orderController.getShowOrders);
+router.get("/show-orders/:id", orderController.getShowOrders);
 router.post("/create-order", authMiddleware, orderController.createOrder);
 router.post(
   "/waiter-order/",

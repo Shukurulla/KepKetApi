@@ -9,9 +9,13 @@ exports.createKassa = async (req, res) => {
     if (!findOrder) {
       return res.status(400).json({ message: "Bunday buyurtma topilmadi" });
     }
-    await orderModel.findByIdAndUpdate(findOrder._id, {
-      $set: { showOrder: false },
-    });
+    await orderModel.findByIdAndUpdate(
+      findOrder._id,
+      {
+        $set: { showOrder: false, payment: true },
+      },
+      { new: true }
+    );
 
     const findWaiter = await waiterModel.findById(req.body.waiter.id);
     if (!findWaiter) {
