@@ -43,7 +43,8 @@ exports.createOrder = async (req, res) => {
     }
 
     // Find available waiters and assign one to the order
-    const waiters = await waiterModel.find({ restaurantId, busy: false });
+    const waitersRestaurant = await waiterModel.find({ restaurantId });
+    const waiters = waitersRestaurant.filter((c) => c.busy == false);
     let assignedWaiter = null;
 
     if (waiters.length > 0) {
