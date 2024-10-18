@@ -14,7 +14,7 @@ exports.createWaiter = async (req, res, next) => {
       return res.status(404).json({ error: "Bunday restoran topilmadi" });
     }
 
-    const findWaiter = await waiterModel.findOne({ username });
+    const findWaiter = await waiterModel.findOne({ username, restaurantId });
 
     if (findWaiter) {
       return res.json({ message: "Bunday ofitsiyant oldin royhatdan otgan" });
