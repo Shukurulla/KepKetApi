@@ -42,20 +42,25 @@ exports.createOrder = async (req, res) => {
       finalPrice -= getPromoCode.discount || 0;
     }
 
-    // Find available waiters and assign one to the order
+    // Find available waiters for the current restaurant
     const waitersRestaurant = await waiterModel.find({ restaurantId });
-    const waiters = waitersRestaurant.filter((c) => c.busy == false);
+    const availableWaiters = waitersRestaurant.filter((c) => c.busy === false);
     let assignedWaiter = null;
 
-    if (waiters.length > 0) {
-      assignedWaiter = waiters[Math.floor(Math.random() * waiters.length)];
+    // If there are available waiters, randomly assign one
+    if (availableWaiters.length > 0) {
+      assignedWaiter =
+        availableWaiters[Math.floor(Math.random() * availableWaiters.length)];
+    } else {
+      // If all waiters are busy, randomly assign one from all waiters of the restaurant
+      const allWaiters = await waiterModel.find({ restaurantId });
+      if (allWaiters.length > 0) {
+        assignedWaiter =
+          allWaiters[Math.floor(Math.random() * allWaiters.length)];
+      }
     }
-    if (assignedWaiter == null) {
-      const waiters = await waiterModel.find();
-      assignedWaiter = waiters[Math.floor(Math.random() * waiters.length)];
-    }
-    // Create the order with the assigned waiter (if any)
 
+    // Create the order with the assigned waiter (if any)
     const findOrder = await orderModel.findOne({
       "tableNumber.id": tableNumber.id,
       payment: false,
@@ -87,6 +92,7 @@ exports.createOrder = async (req, res) => {
       });
 
       const create = await order.save();
+      // Mark the assigned waiter as busy if one was assigned
       if (assignedWaiter) {
         await waiterModel.findByIdAndUpdate(
           assignedWaiter._id,
@@ -107,8 +113,6 @@ exports.createOrder = async (req, res) => {
       }
       return res.status(201).json(create);
     }
-
-    // Mark the assigned waiter as busy if one was assigned
   } catch (error) {
     logger.error("Buyurtma yaratishda xatolik:", error);
     return res.status(500).json({
