@@ -125,7 +125,11 @@ exports.createOrder = async (req, res) => {
 exports.waiterCreateOrder = async (req, res) => {
   try {
     const { restaurantId, waiter, tableNumber, items, promoCode } = req.body;
-
+    if (items.length == 0) {
+      return res
+        .status(400)
+        .json({ message: "Siz hech narsa buyurtma qilmagansiz" });
+    }
     // Restoranni tekshirish
     const restaurant = await Restaurant.findById(restaurantId);
     if (!restaurant) {
