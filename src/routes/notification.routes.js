@@ -5,7 +5,7 @@ const notificationModel = require("../models/notification.model.js");
 
 const router = express.Router();
 const io = require("../../server.js");
-router.post("/", authMiddleware, notificationRoute.createaNotification(io));
+router.post("/", authMiddleware, notificationRoute.createNotification(io));
 router.put("/complate/:id", authMiddleware, notificationRoute.complate);
 router.get("/all/:id", notificationRoute.getAllNotification);
 router.get("/", authMiddleware, notificationRoute.getMyNotification);
