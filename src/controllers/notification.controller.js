@@ -3,23 +3,32 @@ const notificationModel = require("../models/notification.model");
 const orderModel = require("../models/order.model");
 const waiterModel = require("../models/waiter.model");
 
-exports.createaNotification = async (req, res, next) => {
+exports.createNotification = (io) => async (req, res, next) => {
   try {
-    const { orderId, meals } = req.body;
+    const { orderId, meals, waiter } = req.body; // `waiterId` ni req.body'dan qabul qilyapmiz
     const findOrder = await orderModel.findById(orderId);
-    const notification = await notificationModel.create(req.body);
 
-    if (!orderId) {
+    if (!findOrder) {
       return res.status(400).json({ message: "Order ID topilmadi" });
     }
 
+    // Bildirishnoma yaratish
+    const notification = await notificationModel.create({
+      orderId,
+      meals,
+      waiter, // waiter id'ni saqlash
+    });
+
+    // Buyurtma yangilash
     await orderModel.findByIdAndUpdate(orderId, {
       prepared: findOrder.prepared.concat(meals),
     });
 
+    // Agar bildirishnoma muvaffaqiyatli yaratilsa
     if (notification) {
+      // Ofitsiantni `busy` holatiga o'tkazish
       await waiterModel.findByIdAndUpdate(
-        notification.waiter.id,
+        waiter.id, // `waiterId` dan foydalanamiz
         {
           $set: { busy: true },
         },
@@ -27,12 +36,18 @@ exports.createaNotification = async (req, res, next) => {
           new: true,
         }
       );
+      // Foydalanuvchiga (ofitsiantga) socket orqali bildirishnoma yuborish
+      console.log(waiter.id);
+      io.to(waiter.id).emit("get_notification", notification);
     }
+
+    // Javob qaytarish
     res.json(notification);
   } catch (error) {
-    res.json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
+
 exports.complate = async (req, res, next) => {
   try {
     const notification = await notificationModel.findByIdAndUpdate(

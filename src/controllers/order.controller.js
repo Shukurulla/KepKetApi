@@ -1,3 +1,5 @@
+import restaurantModel from "../models/restaurant.model";
+
 const Order = require("../models/order.model");
 const Dish = require("../models/dish.model");
 const Restaurant = require("../models/restaurant.model");
@@ -11,7 +13,7 @@ const promoCodeModel = require("../models/promoCode.model");
 const waiterModel = require("../models/waiter.model");
 const orderModel = require("../models/order.model");
 
-exports.createOrder = async (req, res) => {
+export const createOrder = (io) => async (req, res) => {
   try {
     const { restaurantId, totalPrice, tableNumber, items, promoCode } =
       req.body;
@@ -20,7 +22,7 @@ exports.createOrder = async (req, res) => {
     if (error)
       return res.status(400).json({ message: error.details[0].message });
 
-    const restaurant = await Restaurant.findById(restaurantId);
+    const restaurant = await restaurantModel.findById(restaurantId);
     if (!restaurant)
       return res.status(400).json({ message: "Restoran topilmadi" });
 
@@ -30,7 +32,7 @@ exports.createOrder = async (req, res) => {
 
     let finalPrice = totalPrice;
 
-    // Check and apply promo code if provided
+    // Promo kodini tekshirish va qo'llash
     if (promoCode) {
       const getPromoCode = await promoCodeModel.findById(promoCode);
       if (!getPromoCode)
@@ -42,17 +44,17 @@ exports.createOrder = async (req, res) => {
       finalPrice -= getPromoCode.discount || 0;
     }
 
-    // Find available waiters for the current restaurant
+    // Mavjud ofitsiantlarni topish
     const waitersRestaurant = await waiterModel.find({ restaurantId });
     const availableWaiters = waitersRestaurant.filter((c) => c.busy === false);
     let assignedWaiter = null;
 
-    // If there are available waiters, randomly assign one
+    // Agar mavjud ofitsiantlar bo'lsa, ulardan birini tasodifiy tanlang
     if (availableWaiters.length > 0) {
       assignedWaiter =
         availableWaiters[Math.floor(Math.random() * availableWaiters.length)];
     } else {
-      // If all waiters are busy, randomly assign one from all waiters of the restaurant
+      // Agar barcha ofitsiantlar band bo'lsa, restoran ofitsiantlaridan birini tasodifiy tanlang
       const allWaiters = await waiterModel.find({ restaurantId });
       if (allWaiters.length > 0) {
         assignedWaiter =
@@ -60,7 +62,7 @@ exports.createOrder = async (req, res) => {
       }
     }
 
-    // Create the order with the assigned waiter (if any)
+    // Buyurtmani yaratish
     const findOrder = await orderModel.findOne({
       "tableNumber.id": tableNumber.id,
       payment: false,
@@ -78,6 +80,12 @@ exports.createOrder = async (req, res) => {
         },
         { new: true }
       );
+
+      // Buyurtma yaratishdan so'ng ofitsiantga xabar yuborish
+      if (assignedWaiter) {
+        io.to(assignedWaiter._id.toString()).emit("get_order_update", order);
+      }
+
       return res.json(order);
     } else {
       const order = new Order({
@@ -92,21 +100,24 @@ exports.createOrder = async (req, res) => {
       });
 
       const create = await order.save();
-      // Mark the assigned waiter as busy if one was assigned
+      // Agar ofitsiant tayinlangan bo'lsa, uni band qiling
       if (assignedWaiter) {
         await waiterModel.findByIdAndUpdate(
           assignedWaiter._id,
           { busy: true },
           { new: true }
         );
+
+        // Buyurtma yaratishdan so'ng ofitsiantga xabar yuborish
+        io.to(restaurantId.toString()).emit("get_new_order", create);
       }
 
-      // Update the promo code status if used
+      // Agar promo kod ishlatilgan bo'lsa, statusini yangilang
       if (promoCode) {
         await promoCodeModel.findByIdAndUpdate(
           promoCode,
           {
-            $set: { worked: true, workedBy: order._id },
+            $set: { worked: true, workedBy: create._id },
           },
           { new: true }
         );
@@ -122,16 +133,18 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-exports.waiterCreateOrder = async (req, res) => {
+// Ofitsiant buyurtmasini yaratish uchun router
+export const waiterCreateOrder = (io) => async (req, res) => {
   try {
     const { restaurantId, waiter, tableNumber, items, promoCode } = req.body;
-    if (items.length == 0) {
+    if (items.length === 0) {
       return res
         .status(400)
         .json({ message: "Siz hech narsa buyurtma qilmagansiz" });
     }
+
     // Restoranni tekshirish
-    const restaurant = await Restaurant.findById(restaurantId);
+    const restaurant = await restaurantModel.findById(restaurantId);
     if (!restaurant) {
       return res.status(400).json({ message: "Restoran topilmadi" });
     }
@@ -185,20 +198,27 @@ exports.waiterCreateOrder = async (req, res) => {
       });
     }
 
+    // Ofitsiantga buyurtma haqida xabar yuborish
+    io.to(waiter.id).emit("get_new_order", order);
+
     res.json(order);
   } catch (error) {
     console.error("Xatolik:", error);
     res.status(500).json({ error: "Ichki server xatoligi" });
   }
 };
-
 // Barcha buyurtmalarni olish
-exports.getShowOrders = async (req, res) => {
+exports.getShowOrders = (io) => async (req, res) => {
   try {
     const orders = await orderModel.find({ restaurantId: req.params.id });
 
     const filtered = orders.filter((c) => c.showOrder == true);
     console.log(orders, filtered);
+
+    io.emit(
+      "new_orders",
+      filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    );
 
     res
       .status(200)

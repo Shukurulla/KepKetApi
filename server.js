@@ -2,104 +2,85 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const routes = require("./src/routes");
-const errorMiddleware = require("./src/middlewares/error.middleware");
-const logger = require("./src/utils/logger");
 const http = require("http");
 const { Server } = require("socket.io");
-const swaggerUi = require("swagger-ui-express");
-const swaggerSpec = require("./src/config/swagger");
-const { createOrder } = require("./src/controllers/order.controller");
-const waiterModel = require("./src/models/waiter.model");
-const notificationModel = require("./src/models/notification.model");
-const orderModel = require("./src/models/order.model");
+const admin = require("firebase-admin");
+const serviceAccount = require("./src/serviceAccountKey.json");
+const notificationModel = require("./src/models/notification.model.js");
+const orderModel = require("./src/models/order.model.js");
+// Firebase service account kalitini ko'rsatish
+
+// Firebase ni ishga tushirish
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://kep-ket-default-rtdb.firebaseio.com/", // Firebase Realtime Database URL
+});
 
 const app = express();
-
-app.use(express.json());
-app.use(
-  cors({
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
     origin: "*",
-    optionsSuccessStatus: 200,
-    credentials: true,
-  })
-);
+    methods: ["GET", "POST"],
+  },
+});
 
+// MongoDB bilan ulanish
 mongoose
   .connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => logger.info("MongoDB ga muvaffaqiyatli ulandi"))
-  .catch((err) => logger.error("MongoDB ga ulanishda xatolik:", err));
+  .then(() => console.log("MongoDB ga muvaffaqiyatli ulandi"))
+  .catch((err) => console.error("MongoDB ga ulanishda xatolik:", err));
 
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//   cors: {
-//     origin: "*",
-//     methods: ["GET", "POST"],
-//   },
-// });
-// io.on("connection", (socket) => {
-//   console.log("A user connected:", socket.id);
-//   socket.on("create_order", async (data) => {
-//     try {
-//       const req = {
-//         body: data,
-//       };
-//       const res = {
-//         status: (statusCode) => ({
-//           json: (response) => {
-//             socket.emit("order_response", { statusCode, response });
-//           },
-//         }),
-//       };
-
-//       await createOrder(req, res);
-//     } catch (error) {}
-//   });
-//   let notifications;
-//   socket.on("create_notification", async (data) => {
-//     try {
-//       const notification = await notificationModel.create(data);
-//       console.log("Yangi bildirishnoma:", notification);
-//       notifications = notification;
-
-//       // Ofitsiantga xabar yuborish
-//       io.to(data.waiter.id).emit("get_notification", notification);
-//     } catch (error) {
-//       console.error("Bildirishnoma yaratishda xatolik:", error);
-//     }
-//   });
-//   socket.on("all_orders", async (data) => {
-//     const allOrders = await orderModel.find();
-//     const filterOrders = allOrders.filter((c) => c.restaurantId == data);
-//     socket.emit("get_orders", filterOrders);
-//   });
-//   // Ofitsiant sahifasida ID bilan ulanish
-//   socket.on("waiter_connected", async (waiterId) => {
-//     socket.join(waiterId);
-//     socket.to(waiterId).emit("get", notifications);
-//     notifications = "";
-//   });
-// });
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-app.use("/api", routes);
-
-app.use(errorMiddleware);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  logger.info(`Server ${PORT} portda ishga tushdi`);
-});
-
-// Tizimni to'xtatish signallarini qayta ishlash
-process.on("SIGTERM", () => {
-  logger.info("SIGTERM signali qabul qilindi. Serverning ishini tugatish...");
-  app.close(() => {
-    logger.info("Server toxtatildi");
-    process.exit(0);
+// Socket.io ulanishi
+io.on("connection", (socket) => {
+  // Xabarni qabul qilish
+  // Waiter ulanganda uning ID sini saqlab qo'yish
+  socket.on("waiter_connected", (waiterId) => {
+    console.log(`Ofitsiant ulandi: ${waiterId} | Socket ID: ${socket.id}`);
+    socket.join(waiterId); // Ofitsiantni uning ID si bo'yicha xonaga qo'shish
   });
+  socket.on("send_notification", async (schema) => {
+    try {
+      const { orderId, meals } = schema;
+      io.to(schema.waiter.id).emit("get_notification", schema);
+
+      // Buyurtma topish
+      const findOrder = await orderModel.findById(orderId);
+      if (!findOrder) {
+        return res.status(400).json({ message: "Order ID topilmadi" });
+      }
+
+      // Bildirishnoma yaratish
+      const notification = await notificationModel.create(schema);
+
+      // Buyurtmani yangilash
+      await orderModel.findByIdAndUpdate(orderId, {
+        prepared: findOrder.prepared.concat(meals),
+      });
+
+      if (notification) {
+        // Ofitsiantni yangilash
+        await waiterModel.findByIdAndUpdate(
+          notification.waiter.id,
+          { $set: { busy: true } },
+          { new: true }
+        );
+
+        // Bildirishnomani waiter ga yuborish
+      }
+    } catch (error) {}
+  });
+  socket.on("chef_connected", (chefId) => {
+    console.log(`Chef ulandi: ${chefId} | Socket ID: ${socket.id}`);
+    socket.join(chefId); // Ofitsiantni uning ID si bo'yicha xonaga qo'shish
+  });
+});
+module.exports = io;
+// API uchun port
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server ${PORT} portda ishga tushdi`);
 });
