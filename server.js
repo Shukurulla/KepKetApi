@@ -5,28 +5,15 @@ const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 const admin = require("firebase-admin");
+const serviceAccount = require("./src/serviceAccountKey.json");
 const notificationModel = require("./src/models/notification.model.js");
 const orderModel = require("./src/models/order.model.js");
 // Firebase service account kalitini ko'rsatish
 
 // Firebase ni ishga tushirish
-const env = process.env;
-const acc = {
-  type: env.TYPE,
-  project_id: env.PROJECT_ID,
-  private_key_id: env.PRIVATE_KEY_ID,
-  private_key: env.PRIVATE_KEY,
-  client_email: env.CLIENT_EMAIL,
-  client_id: env.CLIENT_ID,
-  auth_uri: env.AUTH_URI,
-  token_uri: env.TOKEN_URI,
-  auth_provider_x509_cert_url: env.AUTH_PROVIDER_X509_CERT_URI,
-  client_x509_cert_url: env.CLIENT_X509_CER_URI,
-  universe_domain: env.UNIVERSE_DOMAIN,
-};
 
 admin.initializeApp({
-  credential: admin.credential.cert(JSON.stringify(acc)),
+  credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://kep-ket-default-rtdb.firebaseio.com/", // Firebase Realtime Database URL
 });
 
