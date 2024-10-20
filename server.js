@@ -7,9 +7,11 @@ const { Server } = require("socket.io");
 const admin = require("firebase-admin");
 const notificationModel = require("./src/models/notification.model.js");
 const orderModel = require("./src/models/order.model.js");
+const waiterModel = require("./src/models/waiter.model.js"); // waiterModel importini qo'shish
 const serviceAccountKey = require("./serviceAccountKey.json");
-// Firebase service account kalitini ko'rsatish
+const routes = require("./src/routes");
 
+// Firebase service account kalitini ko'rsatish
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccountKey),
   databaseURL: process.env.FIREBASE_DATABASE_URL, // Firebase Realtime Database URL
@@ -17,12 +19,14 @@ admin.initializeApp({
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
+app.use(express.json());
+app.use(
+  cors({
+    origin: "*", // Har qanday manzilni qabul qilish
+    optionsSuccessStatus: 200, // 200 statusini qaytarish
+    credentials: true, // Asosiy ma'lumotlar bilan kelish
+  })
+);
 
 // MongoDB bilan ulanish
 mongoose
@@ -33,14 +37,27 @@ mongoose
   .then(() => console.log("MongoDB ga muvaffaqiyatli ulandi"))
   .catch((err) => console.error("MongoDB ga ulanishda xatolik:", err));
 
+// Socket.io ni o'rnatish
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+// API yo'llari
+app.use("/api", routes);
+
 // Socket.io ulanishi
 io.on("connection", (socket) => {
-  // Xabarni qabul qilish
+  console.log("A user connected");
+
   // Waiter ulanganda uning ID sini saqlab qo'yish
   socket.on("waiter_connected", (waiterId) => {
     console.log(`Ofitsiant ulandi: ${waiterId} | Socket ID: ${socket.id}`);
     socket.join(waiterId); // Ofitsiantni uning ID si bo'yicha xonaga qo'shish
   });
+
   socket.on("send_notification", async (schema) => {
     try {
       const { orderId, meals } = schema;
@@ -49,7 +66,7 @@ io.on("connection", (socket) => {
       // Buyurtma topish
       const findOrder = await orderModel.findById(orderId);
       if (!findOrder) {
-        return res.status(400).json({ message: "Order ID topilmadi" });
+        return; // Agar buyurtma topilmasa, xatolikni qaytarish
       }
 
       // Bildirishnoma yaratish
@@ -70,14 +87,17 @@ io.on("connection", (socket) => {
 
         // Bildirishnomani waiter ga yuborish
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error); // Xatolikni konsolga chiqarish
+    }
   });
+
   socket.on("chef_connected", (chefId) => {
     console.log(`Chef ulandi: ${chefId} | Socket ID: ${socket.id}`);
     socket.join(chefId); // Ofitsiantni uning ID si bo'yicha xonaga qo'shish
   });
 });
-module.exports = io;
+
 // API uchun port
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

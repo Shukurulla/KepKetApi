@@ -1,4 +1,4 @@
-import restaurantModel from "../models/restaurant.model";
+const restaurantModel = require("../models/restaurant.model.js");
 
 const Order = require("../models/order.model");
 const Dish = require("../models/dish.model");
@@ -13,7 +13,7 @@ const promoCodeModel = require("../models/promoCode.model");
 const waiterModel = require("../models/waiter.model");
 const orderModel = require("../models/order.model");
 
-export const createOrder = (io) => async (req, res) => {
+exports.createOrder = (io) => async (req, res) => {
   try {
     const { restaurantId, totalPrice, tableNumber, items, promoCode } =
       req.body;
@@ -134,7 +134,7 @@ export const createOrder = (io) => async (req, res) => {
 };
 
 // Ofitsiant buyurtmasini yaratish uchun router
-export const waiterCreateOrder = (io) => async (req, res) => {
+exports.waiterCreateOrder = (io) => async (req, res) => {
   try {
     const { restaurantId, waiter, tableNumber, items, promoCode } = req.body;
     if (items.length === 0) {
