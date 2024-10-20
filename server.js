@@ -14,7 +14,7 @@ const orderModel = require("./src/models/order.model.js");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://kep-ket-default-rtdb.firebaseio.com/", // Firebase Realtime Database URL
+  databaseURL: process.env.FIREBASE_DATABASE_URL, // Firebase Realtime Database URL
 });
 
 const app = express();
