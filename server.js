@@ -39,11 +39,11 @@ mongoose
 
 // Socket.io ni o'rnatish
 const io = new Server(server, {
-  cors: cors({
+  cors: {
     origin: "*", // Har qanday manzilni qabul qilish
     optionsSuccessStatus: 200, // 200 statusini qaytarish
     credentials: true, // Asosiy ma'lumotlar bilan kelish
-  }),
+  },
 });
 
 // API yo'llari
