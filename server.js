@@ -7,26 +7,11 @@ const { Server } = require("socket.io");
 const admin = require("firebase-admin");
 const notificationModel = require("./src/models/notification.model.js");
 const orderModel = require("./src/models/order.model.js");
+const serviceAccountKey = require("./serviceAccountKey.json");
 // Firebase service account kalitini ko'rsatish
 
-// Firebase ni ishga tushirish
-const acc = {
-  type: process.env.TYPE,
-  project_id: process.env.PROJECT_ID,
-  private_key_id: process.env.PRIVATE_KEY_ID,
-  private_key: process.env.PRIVATE_KEY,
-  client_email: process.env.CLIENT_EMAIL,
-  client_id: process.env.CLIENT_ID,
-  auth_uri: process.env.AUTH_URI,
-  token_uri: process.env.TOKEN_URI,
-  auth_provider_x509_cert_url: process.env.AUTH_PROVIDER_X509_CERT_URI,
-  client_x509_cert_url: process.env.CLIENT_X509_CER_URI,
-  universe_domain: process.env.UNIVERSE_DOMAIN,
-};
-console.log(acc);
-
 admin.initializeApp({
-  credential: admin.credential.cert(acc),
+  credential: admin.credential.cert(serviceAccountKey),
   databaseURL: process.env.FIREBASE_DATABASE_URL, // Firebase Realtime Database URL
 });
 
