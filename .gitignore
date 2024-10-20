@@ -2,4 +2,4 @@
 # Local Netlify folder
 .netlify
 *.env
-./src/serviceAccountKey.json
+/src/serviceAccountKey.json
