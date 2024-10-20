@@ -20,13 +20,6 @@ admin.initializeApp({
 const app = express();
 const server = http.createServer(app);
 app.use(express.json());
-app.use(
-  cors({
-    origin: "*", // Har qanday manzilni qabul qilish
-    optionsSuccessStatus: 200, // 200 statusini qaytarish
-    credentials: true, // Asosiy ma'lumotlar bilan kelish
-  })
-);
 
 // MongoDB bilan ulanish
 mongoose
