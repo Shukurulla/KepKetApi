@@ -104,7 +104,7 @@ app.use((err, req, res, next) => {
 
 // Vercel'ga mos keladigan eksport
 module.exports = app;
-
+module.exports = io;
 // Serverni o'qitish (localhostda ishga tushirish uchun)
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
