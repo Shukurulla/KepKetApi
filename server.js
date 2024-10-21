@@ -6,6 +6,9 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const admin = require("firebase-admin");
 const routes = require("./src/routes");
+const orderModel = require("./src/models/order.model.js");
+const notificationModel = require("./src/models/notification.model.js");
+const waiterModel = require("./src/models/waiter.model.js");
 
 const app = express();
 const httpServer = createServer(app);
@@ -108,7 +111,7 @@ app.use((req, res) => {
 
 // Vercel uchun export
 module.exports = httpServer;
-module.exports = io;
+module.exports = { io };
 
 // Local ishga tushirish
 if (process.env.NODE_ENV !== "production") {

@@ -2,16 +2,15 @@ const express = require("express");
 const authMiddleware = require("../middlewares/auth.middleware");
 const orderController = require("../controllers/order.controller");
 const orderModel = require("../models/order.model.js");
-const io = require("../../server.js");
 const router = express.Router();
 
 router.get("/all/:id", orderController.getAllOrders);
-router.get("/show-orders/:id", orderController.getShowOrders(io));
-router.post("/create-order", authMiddleware, orderController.createOrder(io));
+router.get("/show-orders/:id", orderController.getShowOrders);
+router.post("/create-order", authMiddleware, orderController.createOrder);
 router.post(
   "/waiter-order/",
   authMiddleware,
-  orderController.waiterCreateOrder(io)
+  orderController.waiterCreateOrder
 );
 
 router.get("/all-delete", async (req, res) => {

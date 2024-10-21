@@ -12,8 +12,9 @@ const tableModel = require("../models/table.model");
 const promoCodeModel = require("../models/promoCode.model");
 const waiterModel = require("../models/waiter.model");
 const orderModel = require("../models/order.model");
+const { io } = require("../../server.js");
 
-exports.createOrder = (io) => async (req, res) => {
+exports.createOrder = async (req, res) => {
   try {
     const { restaurantId, totalPrice, tableNumber, items, promoCode } =
       req.body;
@@ -134,7 +135,7 @@ exports.createOrder = (io) => async (req, res) => {
 };
 
 // Ofitsiant buyurtmasini yaratish uchun router
-exports.waiterCreateOrder = (io) => async (req, res) => {
+exports.waiterCreateOrder = async (req, res) => {
   try {
     const { restaurantId, waiter, tableNumber, items, promoCode } = req.body;
     if (items.length === 0) {
@@ -208,17 +209,17 @@ exports.waiterCreateOrder = (io) => async (req, res) => {
   }
 };
 // Barcha buyurtmalarni olish
-exports.getShowOrders = (io) => async (req, res) => {
+exports.getShowOrders = async (req, res) => {
   try {
     const orders = await orderModel.find({ restaurantId: req.params.id });
 
     const filtered = orders.filter((c) => c.showOrder == true);
-    console.log(orders, filtered);
-
-    io.emit(
-      "new_orders",
-      filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    );
+    if (io) {
+      io.emit(
+        "new_orders",
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      );
+    }
 
     res
       .status(200)

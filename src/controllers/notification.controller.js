@@ -2,8 +2,9 @@ const { trace } = require("joi");
 const notificationModel = require("../models/notification.model");
 const orderModel = require("../models/order.model");
 const waiterModel = require("../models/waiter.model");
+const { io } = require("../../server.js");
 
-exports.createNotification = (io) => async (req, res, next) => {
+exports.createNotification = async (req, res, next) => {
   try {
     const { orderId, meals, waiter } = req.body; // `waiterId` ni req.body'dan qabul qilyapmiz
     const findOrder = await orderModel.findById(orderId);
@@ -38,6 +39,7 @@ exports.createNotification = (io) => async (req, res, next) => {
       );
       // Foydalanuvchiga (ofitsiantga) socket orqali bildirishnoma yuborish
       console.log(waiter.id);
+
       io.to(waiter.id).emit("get_notification", notification);
     }
 
