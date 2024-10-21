@@ -1,7 +1,23 @@
+require("dotenv").config();
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
+const admin = require("firebase-admin");
+const notificationModel = require("./src/models/notification.model.js");
+const orderModel = require("./src/models/order.model.js");
+const waiterModel = require("./src/models/waiter.model.js");
+const serviceAccountKey = require("./serviceAccountKey.json");
+
+// Import routes
+const routes = require("./src/routes");
+
+// Firebase service account kalitini ko'rsatish
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccountKey),
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+});
 
 const app = express();
 
@@ -15,16 +31,27 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
 
+// MongoDB bilan ulanish
+mongoose
+  .connect(process.env.DATABASE_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB ga muvaffaqiyatli ulandi"))
+  .catch((err) => console.error("MongoDB ga ulanishda xatolik:", err));
+
+// HTTP server yaratish
 const server = http.createServer(app);
 
-// Socket.IO sozlamalari
+// Socket.io ni o'rnatish
 const io = new Server(server, {
   cors: corsOptions,
   transports: ["websocket", "polling"],
 });
 
-// Socket.IO ulanish hodisasi
+// Socket.io hodisalarini o'rnatish
 io.on("connection", (socket) => {
   console.log("A user connected");
 
@@ -59,6 +86,11 @@ io.on("connection", (socket) => {
       console.error(error);
     }
   });
+
+  socket.on("chef_connected", (chefId) => {
+    console.log(`Chef ulandi: ${chefId} | Socket ID: ${socket.id}`);
+    socket.join(chefId);
+  });
 });
 
 // API yo'llari
@@ -70,13 +102,13 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-// Vercel uchun export
+// Vercel'ga mos keladigan eksport
 module.exports = app;
 
-// Local ishga tushirish uchun
+// Serverni o'qitish (localhostda ishga tushirish uchun)
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
   server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server localhostda ${PORT} portida ishga tushmoqda...`);
   });
 }
