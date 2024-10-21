@@ -1,6 +1,5 @@
-const restaurantModel = require("../models/restaurant.model.js");
-
-const Order = require("../models/order.model");
+const { io } = require("../../server.js");
+const orderModel = require("../models/order.model");
 const Dish = require("../models/dish.model");
 const Restaurant = require("../models/restaurant.model");
 const {
@@ -11,8 +10,6 @@ const logger = require("../utils/logger");
 const tableModel = require("../models/table.model");
 const promoCodeModel = require("../models/promoCode.model");
 const waiterModel = require("../models/waiter.model");
-const orderModel = require("../models/order.model");
-const { io } = require("../../server.js");
 
 exports.createOrder = async (req, res) => {
   try {
@@ -134,7 +131,6 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-// Ofitsiant buyurtmasini yaratish uchun router
 exports.waiterCreateOrder = async (req, res) => {
   try {
     const { restaurantId, waiter, tableNumber, items, promoCode } = req.body;
@@ -208,23 +204,25 @@ exports.waiterCreateOrder = async (req, res) => {
     res.status(500).json({ error: "Ichki server xatoligi" });
   }
 };
-// Barcha buyurtmalarni olish
+
 exports.getShowOrders = async (req, res) => {
   try {
     const orders = await orderModel.find({ restaurantId: req.params.id });
-
-    const filtered = orders.filter((c) => c.showOrder == true);
+    const filteredOrders = orders.filter((c) => c.showOrder == true);
     if (io) {
       io.emit(
         "new_orders",
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        filteredOrders.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        )
       );
     }
-
     res
       .status(200)
       .json(
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        filteredOrders.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        )
       );
   } catch (error) {
     logger.error("Buyurtmalarni olishda xatolik:", error);
@@ -253,7 +251,6 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
-// Bitta buyurtmani ID bo'yicha olish
 exports.getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
@@ -270,7 +267,6 @@ exports.getOrderById = async (req, res) => {
   }
 };
 
-// Buyurtma holatini yangilash
 exports.updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
@@ -302,7 +298,6 @@ exports.updateOrderStatus = async (req, res) => {
   }
 };
 
-// Buyurtmani o'chirish (admin uchun)
 exports.deleteOrder = async (req, res) => {
   try {
     const order = await Order.findByIdAndDelete(req.params.id);
@@ -320,7 +315,6 @@ exports.deleteOrder = async (req, res) => {
   }
 };
 
-// Buyurtmani yangilash
 exports.updateOrder = async (req, res) => {
   try {
     const { items, status, customerName, customerPhone } = req.body;
@@ -361,7 +355,6 @@ exports.updateOrder = async (req, res) => {
   }
 };
 
-// Buyurtmalar statistikasi
 exports.getOrderStatistics = async (req, res) => {
   try {
     const totalOrders = await Order.countDocuments();
@@ -383,6 +376,7 @@ exports.getOrderStatistics = async (req, res) => {
     });
   }
 };
+
 exports.waiterOrders = async (req, res, next) => {
   try {
     const findOrders = await orderModel.find();

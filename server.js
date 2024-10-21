@@ -6,9 +6,6 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const admin = require("firebase-admin");
 const routes = require("./src/routes");
-const orderModel = require("./src/models/order.model.js");
-const notificationModel = require("./src/models/notification.model.js");
-const waiterModel = require("./src/models/waiter.model.js");
 
 const app = express();
 const httpServer = createServer(app);
@@ -55,8 +52,6 @@ const io = new Server(httpServer, {
   cors: corsOptions,
   transports: ["websocket", "polling"],
 });
-
-module.exports = { io };
 
 // Socket.IO ulanish hodisasi
 io.on("connection", (socket) => {
@@ -111,8 +106,9 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });
 
-// Vercel uchun export
+// Vercel uchun
 module.exports = httpServer;
+module.exports = { io };
 
 // Local ishga tushirish
 if (process.env.NODE_ENV !== "production") {
