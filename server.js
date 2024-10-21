@@ -17,9 +17,17 @@ admin.initializeApp({
   databaseURL: process.env.FIREBASE_DATABASE_URL,
 });
 
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://your-frontend-domain.vercel.app"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 // API yo'llari
 app.use("/api", routes);
@@ -38,11 +46,7 @@ const server = http.createServer(app);
 
 // Socket.io ni o'rnatish
 const io = new Server(server, {
-  cors: {
-    origin: "*",
-    optionsSuccessStatus: 200,
-    credentials: true,
-  },
+  cors: corsOptions,
 });
 
 // Socket.io hodisalarini o'rnatish
