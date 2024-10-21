@@ -88,10 +88,7 @@ io.on("connection", (socket) => {
 });
 
 // Vercel'ga mos keladigan eksport
-module.exports = (req, res) => {
-  // Serverni chaqirish
-  server(req, res);
-};
+module.exports = app;
 
 // Serverni o'qitish (localhostda ishga tushirish uchun)
 if (process.env.NODE_ENV !== "production") {
