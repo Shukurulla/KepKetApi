@@ -2,12 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const http = require("http");
+const { createServer } = require("http");
 const { Server } = require("socket.io");
 const admin = require("firebase-admin");
 const routes = require("./src/routes");
 
 const app = express();
+const httpServer = createServer(app);
 
 // CORS sozlamalari
 const corsOptions = {
@@ -15,11 +16,20 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionsSuccessStatus: 204,
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// Timeout sozlamalari
+app.use((req, res, next) => {
+  res.setTimeout(30000, function () {
+    console.log("Request has timed out.");
+    res.status(408).send("Request has timed out.");
+  });
+  next();
+});
 
 // Firebase initializatsiyasi
 admin.initializeApp({
@@ -32,27 +42,52 @@ mongoose
   .connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000, // Timeout 5 sekund
   })
   .then(() => console.log("MongoDB ga muvaffaqiyatli ulandi"))
   .catch((err) => console.error("MongoDB ga ulanishda xatolik:", err));
 
-// HTTP server
-const server = http.createServer(app);
-
 // Socket.IO
-const io = new Server(server, {
+const io = new Server(httpServer, {
   cors: corsOptions,
   transports: ["websocket", "polling"],
 });
 
+// Socket.IO ulanish hodisasi
 io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
+  console.log("A user connected");
 
-  socket.on("error", (error) => {
-    console.error("Socket error:", error);
+  socket.on("waiter_connected", (waiterId) => {
+    console.log(`Ofitsiant ulandi: ${waiterId} | Socket ID: ${socket.id}`);
+    socket.join(waiterId);
   });
 
-  // Boshqa Socket.IO hodisalari...
+  socket.on("send_notification", async (schema) => {
+    try {
+      const { orderId, meals } = schema;
+      io.to(schema.waiter.id).emit("get_notification", schema);
+
+      const findOrder = await orderModel.findById(orderId);
+      if (!findOrder) {
+        return;
+      }
+
+      const notification = await notificationModel.create(schema);
+      await orderModel.findByIdAndUpdate(orderId, {
+        prepared: findOrder.prepared.concat(meals),
+      });
+
+      if (notification) {
+        await waiterModel.findByIdAndUpdate(
+          notification.waiter.id,
+          { $set: { busy: true } },
+          { new: true }
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
 });
 
 // API yo'llari
@@ -72,13 +107,13 @@ app.use((req, res) => {
 });
 
 // Vercel uchun export
-module.exports = app;
+module.exports = httpServer;
 module.exports = io;
 
 // Local ishga tushirish
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
-  server.listen(PORT, () => {
+  httpServer.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 }
