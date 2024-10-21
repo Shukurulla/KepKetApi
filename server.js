@@ -87,11 +87,7 @@ io.on("connection", (socket) => {
   });
 });
 
-// Serverni ishga tushirish
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server ${PORT} portda ishga tushdi`);
-});
-
-// **Export**
-module.exports = { server, app };
+// Vercel'ga mos keladigan eksport
+module.exports = (req, res) => {
+  server(req, res);
+};
