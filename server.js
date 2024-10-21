@@ -5,19 +5,7 @@ const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 const admin = require("firebase-admin");
-const notificationModel = require("./src/models/notification.model.js");
-const orderModel = require("./src/models/order.model.js");
-const waiterModel = require("./src/models/waiter.model.js");
-const serviceAccountKey = require("./serviceAccountKey.json");
-
-// Import routes
 const routes = require("./src/routes");
-
-// Firebase service account kalitini ko'rsatish
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccountKey),
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-});
 
 const app = express();
 
@@ -27,13 +15,19 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// MongoDB bilan ulanish
+// Firebase initializatsiyasi
+admin.initializeApp({
+  credential: admin.credential.cert(require("./serviceAccountKey.json")),
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+});
+
+// MongoDB ulanish
 mongoose
   .connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
@@ -42,55 +36,23 @@ mongoose
   .then(() => console.log("MongoDB ga muvaffaqiyatli ulandi"))
   .catch((err) => console.error("MongoDB ga ulanishda xatolik:", err));
 
-// HTTP server yaratish
+// HTTP server
 const server = http.createServer(app);
 
-// Socket.io ni o'rnatish
+// Socket.IO
 const io = new Server(server, {
   cors: corsOptions,
   transports: ["websocket", "polling"],
 });
 
-// Socket.io hodisalarini o'rnatish
 io.on("connection", (socket) => {
-  console.log("A user connected");
+  console.log("A user connected:", socket.id);
 
-  socket.on("waiter_connected", (waiterId) => {
-    console.log(`Ofitsiant ulandi: ${waiterId} | Socket ID: ${socket.id}`);
-    socket.join(waiterId);
+  socket.on("error", (error) => {
+    console.error("Socket error:", error);
   });
 
-  socket.on("send_notification", async (schema) => {
-    try {
-      const { orderId, meals } = schema;
-      io.to(schema.waiter.id).emit("get_notification", schema);
-
-      const findOrder = await orderModel.findById(orderId);
-      if (!findOrder) {
-        return;
-      }
-
-      const notification = await notificationModel.create(schema);
-      await orderModel.findByIdAndUpdate(orderId, {
-        prepared: findOrder.prepared.concat(meals),
-      });
-
-      if (notification) {
-        await waiterModel.findByIdAndUpdate(
-          notification.waiter.id,
-          { $set: { busy: true } },
-          { new: true }
-        );
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  });
-
-  socket.on("chef_connected", (chefId) => {
-    console.log(`Chef ulandi: ${chefId} | Socket ID: ${socket.id}`);
-    socket.join(chefId);
-  });
+  // Boshqa Socket.IO hodisalari...
 });
 
 // API yo'llari
@@ -99,16 +61,24 @@ app.use("/api", routes);
 // Xatoliklarni qayta ishlash middleware'i
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Something broke!");
+  res
+    .status(500)
+    .json({ error: "Internal Server Error", details: err.message });
 });
 
-// Vercel'ga mos keladigan eksport
+// 404 xatoligi uchun middleware
+app.use((req, res) => {
+  res.status(404).json({ error: "Not Found" });
+});
+
+// Vercel uchun export
 module.exports = app;
 module.exports = io;
-// Serverni o'qitish (localhostda ishga tushirish uchun)
+
+// Local ishga tushirish
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
   server.listen(PORT, () => {
-    console.log(`Server localhostda ${PORT} portida ishga tushmoqda...`);
+    console.log(`Server is running on port ${PORT}`);
   });
 }
