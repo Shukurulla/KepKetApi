@@ -56,6 +56,8 @@ const io = new Server(httpServer, {
   transports: ["websocket", "polling"],
 });
 
+module.exports = { io };
+
 // Socket.IO ulanish hodisasi
 io.on("connection", (socket) => {
   console.log("A user connected");
@@ -111,7 +113,6 @@ app.use((req, res) => {
 
 // Vercel uchun export
 module.exports = httpServer;
-module.exports = { io };
 
 // Local ishga tushirish
 if (process.env.NODE_ENV !== "production") {
