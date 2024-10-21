@@ -1,4 +1,4 @@
-const { io } = require("../../server.js");
+const io = require("../../server.js");
 const orderModel = require("../models/order.model");
 const Dish = require("../models/dish.model");
 const Restaurant = require("../models/restaurant.model");

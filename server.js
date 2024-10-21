@@ -108,7 +108,7 @@ app.use((req, res) => {
 
 // Vercel uchun
 module.exports = httpServer;
-module.exports = { io };
+module.exports = io;
 
 // Local ishga tushirish
 if (process.env.NODE_ENV !== "production") {
