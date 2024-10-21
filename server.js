@@ -10,6 +10,7 @@ const orderModel = require("./src/models/order.model.js");
 const waiterModel = require("./src/models/waiter.model.js"); // waiterModel importini qo'shish
 const serviceAccountKey = require("./serviceAccountKey.json");
 const routes = require("./src/routes");
+const serverless = require("serverless-http"); // Serverless funksionallik uchun qo'shildi
 
 // Firebase service account kalitini ko'rsatish
 admin.initializeApp({
@@ -18,8 +19,11 @@ admin.initializeApp({
 });
 
 const app = express();
-const server = http.createServer(app);
 app.use(express.json());
+app.use(cors());
+
+// API yo'llari
+app.use("/api", routes);
 
 // MongoDB bilan ulanish
 mongoose
@@ -30,6 +34,9 @@ mongoose
   .then(() => console.log("MongoDB ga muvaffaqiyatli ulandi"))
   .catch((err) => console.error("MongoDB ga ulanishda xatolik:", err));
 
+// HTTP server yaratish
+const server = http.createServer(app);
+
 // Socket.io ni o'rnatish
 const io = new Server(server, {
   cors: {
@@ -39,10 +46,7 @@ const io = new Server(server, {
   },
 });
 
-// API yo'llari
-app.use("/api", routes);
-
-// Socket.io ulanishi
+// Socket.io hodisalarini o'rnatish
 io.on("connection", (socket) => {
   console.log("A user connected");
 
@@ -92,10 +96,13 @@ io.on("connection", (socket) => {
   });
 });
 
-module.exports = io;
-
-// API uchun port
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server ${PORT} portda ishga tushdi`);
+// **Serverless funktsiyaga aylantirish**
+module.exports.handler = serverless(app, {
+  // Socket.io ni serverless muhitda ishlatish uchun server yaratish
+  binary: ["*/*"],
+  cors: {
+    origin: "*", // Har qanday manzilni qabul qilish
+    methods: ["GET", "POST"], // Qabul qilinadigan metodlar
+    allowedHeaders: ["Content-Type", "Authorization"], // Qabul qilinadigan headerlar
+  },
 });

@@ -3,3 +3,5 @@
 .netlify
 *.env
 /src/serviceAccountKey.json
+
+.vercel
