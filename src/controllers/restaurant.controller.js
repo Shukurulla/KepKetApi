@@ -67,7 +67,6 @@ exports.getAllRestaurants = async (req, res) => {
 exports.getRestaurantById = async (req, res) => {
   try {
     const restaurant = await Restaurant.findById(req.params.id);
-    console.log(req.params.id);
 
     if (!restaurant) {
       return res.status(404).json({ message: "Restoran topilmadi" });

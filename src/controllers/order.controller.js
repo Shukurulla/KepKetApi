@@ -10,8 +10,9 @@ const logger = require("../utils/logger");
 const tableModel = require("../models/table.model");
 const promoCodeModel = require("../models/promoCode.model");
 const waiterModel = require("../models/waiter.model");
+const restaurantModel = require("../models/restaurant.model");
 
-exports.createOrder = async (req, res) => {
+exports.createOrder = (io) => async (req, res) => {
   try {
     const { restaurantId, totalPrice, tableNumber, items, promoCode } =
       req.body;
@@ -83,10 +84,10 @@ exports.createOrder = async (req, res) => {
       if (assignedWaiter) {
         io.to(assignedWaiter._id.toString()).emit("get_order_update", order);
       }
-
+      io.to(restaurantId).emit("get_new_order", order);
       return res.json(order);
     } else {
-      const order = new Order({
+      const order = await orderModel.create({
         restaurantId,
         tableNumber,
         items,

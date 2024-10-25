@@ -9,10 +9,19 @@ const routes = require("./src/routes");
 
 const app = express();
 const httpServer = createServer(app);
+const orderController = require("./src/controllers/order.controller.js");
+const authMiddleware = require("./src/middlewares/auth.middleware.js");
+const restaurantModel = require("./src/models/restaurant.model.js");
+const logger = require("./src/utils/logger.js");
+const { validateOrderInput } = require("./src/utils/validators.js");
+const tableModel = require("./src/models/table.model.js");
+const promoCodeModel = require("./src/models/promoCode.model.js");
+const waiterModel = require("./src/models/waiter.model.js");
+const orderModel = require("./src/models/order.model.js");
 
 // CORS sozlamalari
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://your-frontend-domain.vercel.app"],
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -55,7 +64,12 @@ const io = new Server(httpServer, {
 
 // Socket.IO ulanish hodisasi
 io.on("connection", (socket) => {
-  console.log("A user connected");
+  console.log("New client connected:", socket.id);
+
+  socket.on("join_restaurant", (restaurantId) => {
+    socket.join(restaurantId);
+    console.log(`Client ${socket.id} joined restaurant: ${restaurantId}`);
+  });
 
   socket.on("waiter_connected", (waiterId) => {
     console.log(`Ofitsiant ulandi: ${waiterId} | Socket ID: ${socket.id}`);
@@ -65,6 +79,9 @@ io.on("connection", (socket) => {
   socket.on("send_notification", async (schema) => {
     try {
       const { orderId, meals } = schema;
+      // Restaurantga yuborish
+      io.to(schema.restaurantId).emit("get_notification", schema);
+      // Ofitsiantga yuborish
       io.to(schema.waiter.id).emit("get_notification", schema);
 
       const findOrder = await orderModel.findById(orderId);
@@ -85,12 +102,131 @@ io.on("connection", (socket) => {
         );
       }
     } catch (error) {
-      console.error(error);
+      console.error("Notification error:", error);
     }
+  });
+
+  socket.on("send_order", async (orderData) => {
+    console.log(orderData);
+
+    try {
+      const { restaurantId, totalPrice, tableNumber, items, promoCode } =
+        orderData;
+
+      // Restaurantga yuborish
+      io.to(restaurantId).emit("get_new_order", orderData);
+
+      const restaurant = await restaurantModel.findById(restaurantId);
+      if (!restaurant)
+        return res.status(400).json({ message: "Restoran topilmadi" });
+
+      const table = await tableModel.findById(tableNumber.id);
+      if (!table)
+        return res.status(400).json({ message: "Bunday stol topilmadi" });
+
+      let finalPrice = totalPrice;
+
+      // Promo kodini tekshirish va qo'llash
+      if (promoCode) {
+        const getPromoCode = await promoCodeModel.findById(promoCode);
+        if (!getPromoCode)
+          return res
+            .status(400)
+            .json({ message: "Bunday PromoCode topilmadi" });
+
+        if (getPromoCode.worked)
+          return res.status(400).json({ message: "Bu kod oldin ishlatilgan" });
+
+        finalPrice -= getPromoCode.discount || 0;
+      }
+
+      // Mavjud ofitsiantlarni topish
+      const waitersRestaurant = await waiterModel.find({ restaurantId });
+      const availableWaiters = waitersRestaurant.filter(
+        (c) => c.busy === false
+      );
+      let assignedWaiter = null;
+
+      // Agar mavjud ofitsiantlar bo'lsa, ulardan birini tasodifiy tanlang
+      if (availableWaiters.length > 0) {
+        assignedWaiter =
+          availableWaiters[Math.floor(Math.random() * availableWaiters.length)];
+      } else {
+        // Agar barcha ofitsiantlar band bo'lsa, restoran ofitsiantlaridan birini tasodifiy tanlang
+        const allWaiters = await waiterModel.find({ restaurantId });
+        if (allWaiters.length > 0) {
+          assignedWaiter =
+            allWaiters[Math.floor(Math.random() * allWaiters.length)];
+        }
+      }
+
+      // Buyurtmani yaratish
+      const findOrder = await orderModel.findOne({
+        "tableNumber.id": tableNumber.id,
+        payment: false,
+        showOrder: true,
+      });
+
+      if (findOrder) {
+        const order = await orderModel.findByIdAndUpdate(
+          findOrder._id,
+          {
+            $set: {
+              items: findOrder.items.concat(items),
+              totalPrice: findOrder.totalPrice + totalPrice,
+            },
+          },
+          { new: true }
+        );
+
+        // Yangilangan buyurtmani yuborish
+        io.to(restaurantId).emit("get_order_update", order);
+        if (assignedWaiter) {
+          io.to(assignedWaiter._id.toString()).emit("get_order_update", order);
+        }
+        return socket.emit("order_response", { status: 200, order });
+      } else {
+        const order = await orderModel.create({
+          restaurantId,
+          tableNumber,
+          items,
+          totalPrice: finalPrice,
+          promoCode: promoCode || null,
+          waiter: assignedWaiter
+            ? { id: assignedWaiter._id, name: assignedWaiter.username }
+            : { id: null },
+        });
+
+        const create = await order.save();
+
+        // Yangi buyurtmani yuborish
+        io.to(restaurantId).emit("get_new_order", create);
+        if (assignedWaiter) {
+          io.to(assignedWaiter._id.toString()).emit("get_order_update", create);
+        }
+        return socket.emit("order_response", { status: 200, order: create });
+      }
+    } catch (error) {
+      return socket.emit("order_response", {
+        status: 500,
+        message: "Buyurtma yaratishda xatolik yuz berdi",
+        error: error.message,
+      });
+    }
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
   });
 });
 
+module.exports = { httpServer, io };
 // API yo'llari
+app.post(
+  "/api/orders/create-order",
+  authMiddleware,
+  orderController.createOrder(io)
+);
 app.use("/api", routes);
 
 // Xatoliklarni qayta ishlash middleware'i
@@ -107,7 +243,6 @@ app.use((req, res) => {
 });
 
 // Vercel uchun
-module.exports = { httpServer, io };
 
 // Local ishga tushirish
 if (process.env.NODE_ENV !== "production") {
