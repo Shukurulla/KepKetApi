@@ -27,6 +27,7 @@ const corsOptions = {
     "http://localhost:5175/",
     "https://kep-ket-admin.vercel.app/",
     "https://unify-liard.vercel.app/",
+    "*",
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -64,7 +65,13 @@ mongoose
 
 // Socket.IO
 const io = new Server(httpServer, {
-  cors: corsOptions,
+  cors: {
+    // Socket.IO uchun maxsus CORS sozlamalari
+    origin: "*", // Yoki yuqoridagi origins arrayini ishlatish mumkin
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  },
   transports: ["websocket", "polling"],
 });
 
