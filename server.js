@@ -21,14 +21,7 @@ const orderModel = require("./src/models/order.model.js");
 
 // CORS sozlamalari
 const corsOptions = {
-  origin: [
-    "http://localhost:5174/",
-    "http://localhost:5173/",
-    "http://localhost:5175/",
-    "https://kep-ket-admin.vercel.app/",
-    "https://unify-liard.vercel.app/",
-    "*",
-  ],
+  origin: "*", // Development vaqtida "*" ishlatamiz
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -66,13 +59,15 @@ mongoose
 // Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    // Socket.IO uchun maxsus CORS sozlamalari
-    origin: "*", // Yoki yuqoridagi origins arrayini ishlatish mumkin
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "*",
+    methods: ["GET", "POST"],
     credentials: true,
   },
-  transports: ["websocket", "polling"],
+  transports: ["polling", "websocket"],
+  path: "/socket.io/",
+  allowEIO3: true,
+  pingTimeout: 60000,
+  pingInterval: 25000,
 });
 
 // Socket.IO handlers
@@ -243,7 +238,6 @@ const setupSocketHandlers = (io) => {
   });
 };
 
-// Setup socket handlers
 setupSocketHandlers(io);
 
 // API routes
@@ -267,5 +261,5 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });
 
-// Export a function that starts the server
+// Export server
 module.exports = httpServer;
