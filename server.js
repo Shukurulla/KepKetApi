@@ -21,7 +21,12 @@ const orderModel = require("./src/models/order.model.js");
 
 // CORS sozlamalari
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://127.0.0.1:5173"], // Frontend manzillarini aniq ko'rsatish
+  origin: [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+  ], // Frontend manzillarini aniq ko'rsatish
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
