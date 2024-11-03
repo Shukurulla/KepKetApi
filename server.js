@@ -20,16 +20,29 @@ const waiterModel = require("./src/models/waiter.model.js");
 const orderModel = require("./src/models/order.model.js");
 
 // CORS sozlamalari
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:5174",
+  "http://127.0.0.1:5174",
+  "https://your-frontend-domain.com", // Frontend domeningizni qo'shing
+];
+
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:5174",
-  ], // Frontend manzillarini aniq ko'rsatish
+  origin: function (origin, callback) {
+    // undefined origin bu serverdan kelgan so'rovlar
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log("Blocked origin:", origin);
+      callback(new Error("CORS policy violation"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
@@ -63,20 +76,19 @@ mongoose
 // Socket.IO
 const io = new Server(httpServer, {
   cors: corsOptions,
-  allowEIO3: true,
-  transports: ["polling"], // Faqat polling
-  pingTimeout: 30000,
+  pingTimeout: 60000,
   pingInterval: 25000,
-  upgradeTimeout: 30000,
+  connectTimeout: 45000,
+  allowEIO3: true,
+  transports: ["polling", "websocket"],
   maxHttpBufferSize: 1e8,
-  allowUpgrades: false, // WebSocket upgrade ni o'chirish
 });
 
 io.engine.on("connection_error", (err) => {
-  console.log(err.req); // HTTP request
-  console.log(err.code); // Error code
-  console.log(err.message); // Error message
-  console.log(err.context); // Additional error context
+  console.log("Connection error details:");
+  console.log("Error code:", err.code);
+  console.log("Error message:", err.message);
+  console.log("Error context:", err.context);
 });
 // Socket.IO handlers
 const setupSocketHandlers = (io) => {
@@ -274,7 +286,10 @@ httpServer.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-// Xatoliklarni global tutish
-process.on("unhandledRejection", (reason, promise) => {
-  console.log("Unhandled Rejection at:", promise, "reason:", reason);
+process.on("SIGTERM", () => {
+  console.info("SIGTERM signal received.");
+  httpServer.close(() => {
+    console.log("Server closed");
+    process.exit(0);
+  });
 });
