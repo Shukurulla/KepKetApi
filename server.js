@@ -21,11 +21,10 @@ const orderModel = require("./src/models/order.model.js");
 
 // CORS sozlamalari
 const corsOptions = {
-  origin: "*", // Development vaqtida "*" ishlatamiz
+  origin: ["http://localhost:5173", "http://127.0.0.1:5173"], // Frontend manzillarini aniq ko'rsatish
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
@@ -58,18 +57,22 @@ mongoose
 
 // Socket.IO
 const io = new Server(httpServer, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-  transports: ["polling", "websocket"],
-  path: "/socket.io/",
+  cors: corsOptions,
   allowEIO3: true,
-  pingTimeout: 60000,
+  transports: ["polling"], // Faqat polling
+  pingTimeout: 30000,
   pingInterval: 25000,
+  upgradeTimeout: 30000,
+  maxHttpBufferSize: 1e8,
+  allowUpgrades: false, // WebSocket upgrade ni o'chirish
 });
 
+io.engine.on("connection_error", (err) => {
+  console.log(err.req); // HTTP request
+  console.log(err.code); // Error code
+  console.log(err.message); // Error message
+  console.log(err.context); // Additional error context
+});
 // Socket.IO handlers
 const setupSocketHandlers = (io) => {
   io.on("connection", (socket) => {
@@ -261,5 +264,12 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });
 
-// Export server
-module.exports = httpServer;
+const PORT = process.env.PORT || 3001;
+httpServer.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+// Xatoliklarni global tutish
+process.on("unhandledRejection", (reason, promise) => {
+  console.log("Unhandled Rejection at:", promise, "reason:", reason);
+});
