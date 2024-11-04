@@ -18,6 +18,7 @@ const tableModel = require("./src/models/table.model.js");
 const promoCodeModel = require("./src/models/promoCode.model.js");
 const waiterModel = require("./src/models/waiter.model.js");
 const orderModel = require("./src/models/order.model.js");
+const notificationModel = require("./src/models/notification.model.js");
 
 // CORS sozlamalari
 
@@ -108,8 +109,6 @@ const setupSocketHandlers = (io) => {
     socket.on("send_notification", async (schema) => {
       try {
         const { orderId, meals } = schema;
-        io.to(schema.restaurantId).emit("get_notification", schema);
-        io.to(schema.waiter.id).emit("get_notification", schema);
 
         const findOrder = await orderModel.findById(orderId);
         if (!findOrder) return;
@@ -125,6 +124,10 @@ const setupSocketHandlers = (io) => {
             { $set: { busy: true } },
             { new: true }
           );
+        }
+        if (notification) {
+          io.to(schema.restaurantId).emit("get_notification", notification);
+          io.to(schema.waiter.id).emit("get_notification", notification);
         }
       } catch (error) {
         console.error("Notification error:", error);
