@@ -27,6 +27,8 @@ const allowedOrigins = [
   "http://127.0.0.1:5173",
   "http://localhost:5174",
   "http://127.0.0.1:5174",
+  "https://unify-liard.vercel.app/",
+  "https://kep-ket-admin.vercel.app/",
   "https://your-frontend-domain.com", // Frontend domeningizni qo'shing
 ];
 
@@ -111,6 +113,7 @@ const setupSocketHandlers = (io) => {
         const { orderId, meals } = schema;
 
         const findOrder = await orderModel.findById(orderId);
+
         if (!findOrder) return;
 
         const notification = await notificationModel.create(schema);
@@ -124,10 +127,10 @@ const setupSocketHandlers = (io) => {
             { $set: { busy: true } },
             { new: true }
           );
-        }
-        if (notification) {
-          io.to(schema.restaurantId).emit("get_notification", notification);
-          io.to(schema.waiter.id).emit("get_notification", notification);
+          await io
+            .to(schema.restaurantId)
+            .emit("get_notification", notification);
+          await io.to(schema.waiter.id).emit("get_notification", notification);
         }
       } catch (error) {
         console.error("Notification error:", error);
