@@ -33,22 +33,17 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    // undefined origin bu serverdan kelgan so'rovlar
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.log("Blocked origin:", origin);
-      callback(new Error("CORS policy violation"));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
+  origin: allowedOrigins,
   optionsSuccessStatus: 200,
+  credentials: true,
 };
-
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: allowedOrigins,
+    optionsSuccessStatus: 200,
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Timeout sozlamalari
