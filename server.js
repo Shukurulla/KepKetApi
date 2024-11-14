@@ -71,6 +71,21 @@ mongoose
   .then(() => console.log("MongoDB ga muvaffaqiyatli ulandi"))
   .catch((err) => console.error("MongoDB ga ulanishda xatolik:", err));
 
+const renderUrl = "https://kepketapi.onrender.com/"; // Render.com dagi serveringiz manzilini qo'shing
+
+// Ping qilish funksiyasi
+const pingRenderServer = async () => {
+  try {
+    const response = await fetch(renderUrl);
+    console.log("Render serverga ping jo'natildi:", response.status);
+  } catch (error) {
+    console.error("Pingda xatolik yuz berdi:", error);
+  }
+};
+
+// Har 1 daqiqada ping qilish
+setInterval(pingRenderServer, 60000);
+
 // Socket.IO
 const io = new Server(httpServer, {
   cors: corsOptions,
@@ -268,6 +283,9 @@ app.post(
   orderController.createOrder(io)
 );
 app.use("/api", routes);
+app.get("/", (req, res) => {
+  res.json({ msg: "Hello" });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
