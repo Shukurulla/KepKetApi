@@ -72,12 +72,14 @@ mongoose
   .catch((err) => console.error("MongoDB ga ulanishda xatolik:", err));
 
 const renderUrl = "https://kepketapi.onrender.com/"; // Render.com dagi serveringiz manzilini qo'shing
-
+const nodeBot = "https://node-copy-kappa.vercel.app/";
 // Ping qilish funksiyasi
 const pingRenderServer = async () => {
   try {
     const response = await fetch(renderUrl);
     console.log("Render serverga ping jo'natildi:", response.status);
+    const res = await fetch(nodeBot);
+    console.log("Vercel Node serverga ping jo'natildi:", res.status);
   } catch (error) {
     console.error("Pingda xatolik yuz berdi:", error);
   }
