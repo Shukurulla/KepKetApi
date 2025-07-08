@@ -16,13 +16,7 @@ const server = http.createServer(app);
 
 // CORS konfiguratsiyasi
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "https://unify-liard.vercel.app/",
-    "https://kepket-admin.vercel.app",
-  ],
+  origin: ["*"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
