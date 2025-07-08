@@ -14,21 +14,41 @@ const connectDB = require("./src/config/database");
 const app = express();
 const server = http.createServer(app);
 
-// CORS konfiguratsiyasi
+// CORS konfiguratsiyasi - BARCHA URLlar uchun ochiq
 const corsOptions = {
-  origin: ["*"],
+  origin: "*", // Barcha originlarni qabul qilish
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+    "Origin",
+  ],
+  optionsSuccessStatus: 200, // Legacy browser support
 };
 
 app.use(cors(corsOptions));
 
-// Socket.IO konfiguratsiyasi
+// Socket.IO konfiguratsiyasi - BARCHA URLlar uchun ochiq
 const io = socketIo(server, {
-  cors: corsOptions,
+  cors: {
+    origin: "*", // Barcha originlarni qabul qilish
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+    ],
+    credentials: true,
+  },
   transports: ["websocket", "polling"],
   allowEIO3: true,
+  pingTimeout: 60000,
+  pingInterval: 25000,
 });
 
 // Socket.IO eventlarini boshqarish
@@ -71,7 +91,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  // Waiter ulanishini qayd qilish
+  // Waiter ulanishini qayd qilish - Enhanced
   socket.on("waiter_connected", (data) => {
     console.log("👨‍💼 Waiter ulandi:", data);
 
@@ -100,6 +120,13 @@ io.on("connection", (socket) => {
       }
 
       console.log(`✅ Waiter ${waiterId} registered with socket ${socket.id}`);
+
+      // Waiterga connection tasdiqlash
+      socket.emit("waiter_connected_success", {
+        waiterId: waiterId,
+        restaurantId: restaurantId,
+        socketId: socket.id,
+      });
     }
   });
 
@@ -191,6 +218,46 @@ io.on("connection", (socket) => {
     }
   });
 
+  // Enhanced get_new_order event
+  socket.on("get_new_order", (orderData) => {
+    console.log("📋 get_new_order received:", orderData);
+
+    const { waiter, restaurantId } = orderData;
+
+    if (waiter && waiter.id) {
+      const waiterSocketId = connectedWaiters.get(waiter.id);
+      if (waiterSocketId) {
+        io.to(waiterSocketId).emit("get_new_order", orderData);
+        io.to(waiterSocketId).emit("get_notification", orderData);
+      }
+      io.to(`waiter_${waiter.id}`).emit("get_new_order", orderData);
+    }
+
+    if (restaurantId) {
+      io.to(`restaurant_${restaurantId}`).emit("get_new_order", orderData);
+    }
+  });
+
+  // Notification acceptance from waiter
+  socket.on("notification_accepted", (data) => {
+    console.log("✅ Notification accepted:", data);
+
+    const { notificationId, waiterId } = data;
+    const waiterInfo = connectedSockets.get(socket.id);
+
+    if (waiterInfo && waiterInfo.restaurantId) {
+      // Notify admin panel that waiter accepted
+      io.to(`restaurant_${waiterInfo.restaurantId}`).emit(
+        "notification_accepted",
+        {
+          notificationId,
+          waiterId,
+          timestamp: new Date().toISOString(),
+        }
+      );
+    }
+  });
+
   // Order status yangilash
   socket.on("update_order_status", async (data) => {
     console.log("🔄 Order status yangilanmoqda:", data);
@@ -248,9 +315,19 @@ io.on("connection", (socket) => {
     }
   });
 
+  // Test connection
+  socket.on("test_connection", () => {
+    console.log("🧪 Test connection from:", socket.id);
+    socket.emit("test_response", {
+      message: "Connection successful",
+      socketId: socket.id,
+      timestamp: new Date().toISOString(),
+    });
+  });
+
   // Disconnect hodisasi
-  socket.on("disconnect", () => {
-    console.log(`🔌 Socket uzildi: ${socket.id}`);
+  socket.on("disconnect", (reason) => {
+    console.log(`🔌 Socket uzildi: ${socket.id}, Sabab: ${reason}`);
 
     const socketInfo = connectedSockets.get(socket.id);
     if (socketInfo) {
@@ -274,22 +351,89 @@ io.on("connection", (socket) => {
       totalSockets: connectedSockets.size,
     });
   });
+
+  // Heartbeat for connection monitoring
+  socket.on("ping", () => {
+    socket.emit("pong", {
+      timestamp: new Date().toISOString(),
+      socketId: socket.id,
+    });
+  });
 });
 
 // Express middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
+// Additional CORS headers middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,PUT,POST,DELETE,OPTIONS,PATCH"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Health check endpoint
+// Health check endpoint - Enhanced
 app.get("/health", (req, res) => {
   res.json({
     status: "OK",
     timestamp: new Date().toISOString(),
     connectedWaiters: Array.from(connectedWaiters.keys()),
     connectedRestaurants: Array.from(connectedRestaurants.keys()),
+    totalConnections: connectedSockets.size,
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    version: process.env.npm_package_version || "1.0.0",
+  });
+});
+
+// Socket status endpoint
+app.get("/socket-status", (req, res) => {
+  res.json({
+    totalConnections: io.engine.clientsCount,
+    connectedWaiters: Array.from(connectedWaiters.entries()),
+    connectedRestaurants: Array.from(connectedRestaurants.entries()),
+    socketDetails: Array.from(connectedSockets.entries()),
+  });
+});
+
+// Test endpoint for socket connectivity
+app.post("/test-socket", (req, res) => {
+  const { waiterId, restaurantId, message } = req.body;
+
+  if (waiterId) {
+    io.to(`waiter_${waiterId}`).emit("test_message", {
+      message: message || "Test message from server",
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  if (restaurantId) {
+    io.to(`restaurant_${restaurantId}`).emit("test_message", {
+      message: message || "Test message from server",
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  res.json({
+    success: true,
+    message: "Test message sent",
+    targets: { waiterId, restaurantId },
   });
 });
 
@@ -308,10 +452,12 @@ connectDB();
 
 const PORT = process.env.PORT || 1234;
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   logger.info(`🚀 Server ${PORT} portda ishga tushdi`);
   console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
   console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
+  console.log(`🔌 Socket Status: http://localhost:${PORT}/socket-status`);
+  console.log(`🌍 CORS: Barcha URLlar uchun ochiq`);
 });
 
 // Unhandled promise rejection
@@ -326,4 +472,19 @@ process.on("unhandledRejection", (err, promise) => {
 process.on("uncaughtException", (err) => {
   logger.error("Uncaught Exception:", err);
   process.exit(1);
+});
+
+// Graceful shutdown
+process.on("SIGTERM", () => {
+  console.log("🛑 SIGTERM received, shutting down gracefully");
+  server.close(() => {
+    console.log("💀 Process terminated");
+  });
+});
+
+process.on("SIGINT", () => {
+  console.log("🛑 SIGINT received, shutting down gracefully");
+  server.close(() => {
+    console.log("💀 Process terminated");
+  });
 });
