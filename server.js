@@ -20,6 +20,7 @@ const corsOptions = {
     "http://localhost:3000",
     "http://localhost:5173",
     "http://localhost:5174",
+    "https://unify-liard.vercel.app/",
     "https://kepket-admin.vercel.app",
   ],
   credentials: true,
