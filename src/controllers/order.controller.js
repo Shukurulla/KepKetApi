@@ -1,4 +1,3 @@
-const { io } = require("../../server.js");
 const orderModel = require("../models/order.model");
 const Dish = require("../models/dish.model");
 const Restaurant = require("../models/restaurant.model");
@@ -12,7 +11,7 @@ const promoCodeModel = require("../models/promoCode.model");
 const waiterModel = require("../models/waiter.model");
 const restaurantModel = require("../models/restaurant.model");
 
-exports.createOrder = (io) => async (req, res) => {
+exports.createOrder = async (req, res) => {
   try {
     const { restaurantId, totalPrice, tableNumber, items, promoCode } =
       req.body;
@@ -80,11 +79,20 @@ exports.createOrder = (io) => async (req, res) => {
         { new: true }
       );
 
-      // Buyurtma yaratishdan so'ng ofitsiantga xabar yuborish
-      if (assignedWaiter) {
-        io.to(assignedWaiter._id.toString()).emit("get_order_update", order);
+      // Socket orqali yangi order haqida xabar berish
+      if (global.io) {
+        // Waiterga yuborish
+        if (assignedWaiter) {
+          global.io
+            .to(`waiter_${assignedWaiter._id}`)
+            .emit("get_order_update", order);
+        }
+        // Restaurant owneriga yuborish
+        global.io
+          .to(`restaurant_${restaurantId}`)
+          .emit("get_order_update", order);
       }
-      io.to(restaurantId).emit("get_new_order", order);
+
       return res.json(order);
     } else {
       const order = await orderModel.create({
@@ -96,9 +104,11 @@ exports.createOrder = (io) => async (req, res) => {
         waiter: assignedWaiter
           ? { id: assignedWaiter._id, name: assignedWaiter.username }
           : { id: null },
+        customerName: req.body.customerName || "Mijoz", // Customer name qo'shish
       });
 
-      const create = await order.save();
+      const createdOrder = await order.save();
+
       // Agar ofitsiant tayinlangan bo'lsa, uni band qiling
       if (assignedWaiter) {
         await waiterModel.findByIdAndUpdate(
@@ -107,8 +117,19 @@ exports.createOrder = (io) => async (req, res) => {
           { new: true }
         );
 
-        // Buyurtma yaratishdan so'ng ofitsiantga xabar yuborish
-        io.to(restaurantId.toString()).emit("get_new_order", create);
+        // Socket orqali waiterga xabar yuborish
+        if (global.io) {
+          global.io
+            .to(`waiter_${assignedWaiter._id}`)
+            .emit("get_new_order", createdOrder);
+        }
+      }
+
+      // Socket orqali restaurant owneriga xabar yuborish
+      if (global.io) {
+        global.io
+          .to(`restaurant_${restaurantId}`)
+          .emit("get_new_order", createdOrder);
       }
 
       // Agar promo kod ishlatilgan bo'lsa, statusini yangilang
@@ -116,12 +137,13 @@ exports.createOrder = (io) => async (req, res) => {
         await promoCodeModel.findByIdAndUpdate(
           promoCode,
           {
-            $set: { worked: true, workedBy: create._id },
+            $set: { worked: true, workedBy: createdOrder._id },
           },
           { new: true }
         );
       }
-      return res.status(201).json(create);
+
+      return res.status(201).json(createdOrder);
     }
   } catch (error) {
     logger.error("Buyurtma yaratishda xatolik:", error);
@@ -134,7 +156,15 @@ exports.createOrder = (io) => async (req, res) => {
 
 exports.waiterCreateOrder = async (req, res) => {
   try {
-    const { restaurantId, waiter, tableNumber, items, promoCode } = req.body;
+    const {
+      restaurantId,
+      waiter,
+      tableNumber,
+      items,
+      promoCode,
+      customerName,
+    } = req.body;
+
     if (items.length === 0) {
       return res
         .status(400)
@@ -183,7 +213,12 @@ exports.waiterCreateOrder = async (req, res) => {
     }
 
     // Buyurtmani yaratish
-    const order = await orderModel.create({ ...req.body, totalPrice });
+    const order = await orderModel.create({
+      ...req.body,
+      totalPrice,
+      customerName: customerName || "Mijoz",
+    });
+
     if (!order) {
       return res.status(400).json({ error: "Buyurtma berishda xatolik ketdi" });
     }
@@ -196,8 +231,14 @@ exports.waiterCreateOrder = async (req, res) => {
       });
     }
 
-    // Ofitsiantga buyurtma haqida xabar yuborish
-    io.to(waiter.id).emit("get_new_order", order);
+    // Socket orqali xabar yuborish
+    if (global.io) {
+      // Waiterga yuborish
+      global.io.to(`waiter_${waiter.id}`).emit("get_new_order", order);
+
+      // Restaurant owneriga yuborish
+      global.io.to(`restaurant_${restaurantId}`).emit("get_new_order", order);
+    }
 
     res.json(order);
   } catch (error) {
@@ -210,14 +251,17 @@ exports.getShowOrders = async (req, res) => {
   try {
     const orders = await orderModel.find({ restaurantId: req.params.id });
     const filteredOrders = orders.filter((c) => c.showOrder == true);
-    if (io) {
-      io.emit(
+
+    // Socket orqali ham yuborish
+    if (global.io) {
+      global.io.to(`restaurant_${req.params.id}`).emit(
         "new_orders",
         filteredOrders.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         )
       );
     }
+
     res
       .status(200)
       .json(
@@ -254,7 +298,7 @@ exports.getAllOrders = async (req, res) => {
 
 exports.getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await orderModel.findById(req.params.id);
     if (!order) {
       return res.status(404).json({ message: "Buyurtma topilmadi" });
     }
@@ -273,19 +317,42 @@ exports.updateOrderStatus = async (req, res) => {
     const { status } = req.body;
 
     // Status validatsiyasi
-    const { error } = validateOrderStatus(status);
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
+    const validStatuses = [
+      "pending",
+      "preparing",
+      "ready",
+      "completed",
+      "cancelled",
+    ];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: "Noto'g'ri status" });
     }
 
-    const order = await Order.findByIdAndUpdate(
+    const order = await orderModel.findByIdAndUpdate(
       req.params.id,
       { status },
       { new: true }
     );
+
     if (!order) {
       return res.status(404).json({ message: "Buyurtma topilmadi" });
     }
+
+    // Socket orqali barcha ulangan clientlarga yangilanishni yuborish
+    if (global.io) {
+      // Restaurant owneriga yuborish
+      global.io
+        .to(`restaurant_${order.restaurantId}`)
+        .emit("get_order_update", order);
+
+      // Waiterga yuborish
+      if (order.waiter && order.waiter.id) {
+        global.io
+          .to(`waiter_${order.waiter.id}`)
+          .emit("get_order_update", order);
+      }
+    }
+
     logger.info(
       `Buyurtma holati yangilandi: ${order._id}, Yangi holat: ${status}`
     );
@@ -301,10 +368,24 @@ exports.updateOrderStatus = async (req, res) => {
 
 exports.deleteOrder = async (req, res) => {
   try {
-    const order = await Order.findByIdAndDelete(req.params.id);
+    const order = await orderModel.findByIdAndDelete(req.params.id);
     if (!order) {
       return res.status(404).json({ message: "Buyurtma topilmadi" });
     }
+
+    // Socket orqali o'chirilganini xabar berish
+    if (global.io) {
+      global.io
+        .to(`restaurant_${order.restaurantId}`)
+        .emit("order_deleted", order._id);
+
+      if (order.waiter && order.waiter.id) {
+        global.io
+          .to(`waiter_${order.waiter.id}`)
+          .emit("order_deleted", order._id);
+      }
+    }
+
     logger.info(`Buyurtma o'chirildi: ${order._id}`);
     res.status(200).json({ message: "Buyurtma muvaffaqiyatli ochirildi" });
   } catch (error) {
@@ -333,7 +414,7 @@ exports.updateOrder = async (req, res) => {
       }
     }
 
-    const updatedOrder = await Order.findByIdAndUpdate(
+    const updatedOrder = await orderModel.findByIdAndUpdate(
       req.params.id,
       {
         $set: req.body,
@@ -343,6 +424,19 @@ exports.updateOrder = async (req, res) => {
 
     if (!updatedOrder) {
       return res.status(404).json({ message: "Buyurtma topilmadi" });
+    }
+
+    // Socket orqali yangilanishni yuborish
+    if (global.io) {
+      global.io
+        .to(`restaurant_${updatedOrder.restaurantId}`)
+        .emit("get_order_update", updatedOrder);
+
+      if (updatedOrder.waiter && updatedOrder.waiter.id) {
+        global.io
+          .to(`waiter_${updatedOrder.waiter.id}`)
+          .emit("get_order_update", updatedOrder);
+      }
     }
 
     logger.info(`Buyurtma yangilandi: ${updatedOrder._id}`);
@@ -358,9 +452,11 @@ exports.updateOrder = async (req, res) => {
 
 exports.getOrderStatistics = async (req, res) => {
   try {
-    const totalOrders = await Order.countDocuments();
-    const completedOrders = await Order.countDocuments({ status: "completed" });
-    const totalRevenue = await Order.aggregate([
+    const totalOrders = await orderModel.countDocuments();
+    const completedOrders = await orderModel.countDocuments({
+      status: "completed",
+    });
+    const totalRevenue = await orderModel.aggregate([
       { $group: { _id: null, total: { $sum: "$totalPrice" } } },
     ]);
 
@@ -391,7 +487,7 @@ exports.waiterOrders = async (req, res, next) => {
     }
     res.status(200).json(currentWaiterOrders);
   } catch (error) {
-    res.status(400).json({ error: error.message0 });
+    res.status(400).json({ error: error.message });
     next();
   }
 };

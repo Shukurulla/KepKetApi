@@ -1,316 +1,334 @@
 require("dotenv").config();
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
-const { createServer } = require("http");
-const { Server } = require("socket.io");
-const admin = require("firebase-admin");
+const mongoose = require("mongoose");
+const http = require("http");
+const socketIo = require("socket.io");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./src/config/swagger");
 const routes = require("./src/routes");
+const errorMiddleware = require("./src/middlewares/error.middleware");
+const logger = require("./src/utils/logger");
+const connectDB = require("./src/config/database");
 
 const app = express();
-const httpServer = createServer(app);
-const orderController = require("./src/controllers/order.controller.js");
-const authMiddleware = require("./src/middlewares/auth.middleware.js");
-const restaurantModel = require("./src/models/restaurant.model.js");
-const logger = require("./src/utils/logger.js");
-const { validateOrderInput } = require("./src/utils/validators.js");
-const tableModel = require("./src/models/table.model.js");
-const promoCodeModel = require("./src/models/promoCode.model.js");
-const waiterModel = require("./src/models/waiter.model.js");
-const orderModel = require("./src/models/order.model.js");
-const notificationModel = require("./src/models/notification.model.js");
+const server = http.createServer(app);
 
-// CORS sozlamalari
-
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-  "http://localhost:5174",
-  "http://127.0.0.1:5174",
-  "https://unify-liard.vercel.app",
-  "https://kep-ket-admin.vercel.app",
-  "https://your-frontend-domain.com", // Frontend domeningizni qo'shing
-];
-
+// CORS konfiguratsiyasi
 const corsOptions = {
-  origin: allowedOrigins,
-  optionsSuccessStatus: 200,
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "https://kepket-admin.vercel.app",
+  ],
   credentials: true,
-};
-app.use(
-  cors({
-    origin: allowedOrigins,
-    optionsSuccessStatus: 200,
-    credentials: true,
-  })
-);
-app.use(express.json());
-
-// Timeout sozlamalari
-app.use((req, res, next) => {
-  res.setTimeout(30000, function () {
-    console.log("Request has timed out.");
-    res.status(408).send("Request has timed out.");
-  });
-  next();
-});
-
-// Firebase initializatsiyasi
-admin.initializeApp({
-  credential: admin.credential.cert(require("./serviceAccountKey.json")),
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-});
-
-// MongoDB ulanish
-mongoose
-  .connect(process.env.DATABASE_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000,
-  })
-  .then(() => console.log("MongoDB ga muvaffaqiyatli ulandi"))
-  .catch((err) => console.error("MongoDB ga ulanishda xatolik:", err));
-
-const renderUrl = "https://kepketapi.onrender.com/"; // Render.com dagi serveringiz manzilini qo'shing
-const nodeBot = "https://node-copy-kappa.vercel.app/";
-// Ping qilish funksiyasi
-const pingRenderServer = async () => {
-  try {
-    const response = await fetch(renderUrl);
-    console.log("Render serverga ping jo'natildi:", response.status);
-    const res = await fetch(nodeBot);
-    console.log("Vercel Node serverga ping jo'natildi:", res.status);
-  } catch (error) {
-    console.error("Pingda xatolik yuz berdi:", error);
-  }
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// Har 1 daqiqada ping qilish
-setInterval(pingRenderServer, 60000);
+app.use(cors(corsOptions));
 
-// Socket.IO
-const io = new Server(httpServer, {
+// Socket.IO konfiguratsiyasi
+const io = socketIo(server, {
   cors: corsOptions,
-  pingTimeout: 60000,
-  pingInterval: 25000,
-  connectTimeout: 45000,
+  transports: ["websocket", "polling"],
   allowEIO3: true,
-  transports: ["polling", "websocket"],
-  maxHttpBufferSize: 1e8,
 });
 
-io.engine.on("connection_error", (err) => {
-  console.log("Connection error details:");
-  console.log("Error code:", err.code);
-  console.log("Error message:", err.message);
-  console.log("Error context:", err.context);
-});
-// Socket.IO handlers
-const setupSocketHandlers = (io) => {
-  io.on("connection", (socket) => {
-    console.log("New client connected:", socket.id);
+// Socket.IO eventlarini boshqarish
+const connectedWaiters = new Map(); // waiterId -> socketId mapping
+const connectedRestaurants = new Map(); // restaurantId -> socketId mapping
+const connectedSockets = new Map(); // socketId -> user info mapping
 
-    socket.on("join_restaurant", (restaurantId) => {
-      socket.join(restaurantId);
-      console.log(`Client ${socket.id} joined restaurant: ${restaurantId}`);
-    });
+io.on("connection", (socket) => {
+  console.log(`🔌 Yangi socket ulandi: ${socket.id}`);
 
-    socket.on("waiter_connected", (waiterId) => {
-      console.log(`Ofitsiant ulandi: ${waiterId} | Socket ID: ${socket.id}`);
-      socket.join(waiterId);
-    });
+  // Restaurant owner ulanishini qayd qilish
+  socket.on("restaurant_connected", (restaurantId) => {
+    console.log(`🏪 Restaurant ${restaurantId} ulandi`);
+    socket.join(`restaurant_${restaurantId}`);
+    socket.join(restaurantId); // Old format support
 
-    socket.on("send_notification", async (schema) => {
-      try {
-        const { orderId, meals } = schema;
-
-        const findOrder = await orderModel.findById(orderId);
-
-        if (!findOrder) return;
-
-        const notification = await notificationModel.create(schema);
-        await orderModel.findByIdAndUpdate(orderId, {
-          prepared: findOrder.prepared.concat(meals),
-        });
-
-        if (notification) {
-          await waiterModel.findByIdAndUpdate(
-            notification.waiter.id,
-            { $set: { busy: true } },
-            { new: true }
-          );
-          await io
-            .to(schema.restaurantId)
-            .emit("get_notification", notification);
-          await io.to(schema.waiter.id).emit("get_notification", notification);
-        }
-      } catch (error) {
-        console.error("Notification error:", error);
-      }
-    });
-
-    socket.on("send_order", async (orderData) => {
-      try {
-        const { restaurantId, totalPrice, tableNumber, items, promoCode } =
-          orderData;
-
-        io.to(restaurantId).emit("get_new_order", orderData);
-
-        const restaurant = await restaurantModel.findById(restaurantId);
-        if (!restaurant) {
-          return socket.emit("order_response", {
-            status: 400,
-            message: "Restoran topilmadi",
-          });
-        }
-
-        const table = await tableModel.findById(tableNumber.id);
-        if (!table) {
-          return socket.emit("order_response", {
-            status: 400,
-            message: "Bunday stol topilmadi",
-          });
-        }
-
-        let finalPrice = totalPrice;
-
-        if (promoCode) {
-          const getPromoCode = await promoCodeModel.findById(promoCode);
-          if (!getPromoCode) {
-            return socket.emit("order_response", {
-              status: 400,
-              message: "Bunday PromoCode topilmadi",
-            });
-          }
-
-          if (getPromoCode.worked) {
-            return socket.emit("order_response", {
-              status: 400,
-              message: "Bu kod oldin ishlatilgan",
-            });
-          }
-
-          finalPrice -= getPromoCode.discount || 0;
-        }
-
-        const waitersRestaurant = await waiterModel.find({ restaurantId });
-        const availableWaiters = waitersRestaurant.filter(
-          (c) => c.busy === false
-        );
-        let assignedWaiter = null;
-
-        if (availableWaiters.length > 0) {
-          assignedWaiter =
-            availableWaiters[
-              Math.floor(Math.random() * availableWaiters.length)
-            ];
-        } else {
-          const allWaiters = await waiterModel.find({ restaurantId });
-          if (allWaiters.length > 0) {
-            assignedWaiter =
-              allWaiters[Math.floor(Math.random() * allWaiters.length)];
-          }
-        }
-
-        const findOrder = await orderModel.findOne({
-          "tableNumber.id": tableNumber.id,
-          payment: false,
-          showOrder: true,
-        });
-
-        if (findOrder) {
-          const order = await orderModel.findByIdAndUpdate(
-            findOrder._id,
-            {
-              $set: {
-                items: findOrder.items.concat(items),
-                totalPrice: findOrder.totalPrice + totalPrice,
-              },
-            },
-            { new: true }
-          );
-
-          io.to(restaurantId).emit("get_order_update", order);
-          if (assignedWaiter) {
-            io.to(assignedWaiter._id.toString()).emit(
-              "get_order_update",
-              order
-            );
-          }
-          return socket.emit("order_response", { status: 200, order });
-        } else {
-          const order = await orderModel.create({
-            restaurantId,
-            tableNumber,
-            items,
-            totalPrice: finalPrice,
-            promoCode: promoCode || null,
-            waiter: assignedWaiter
-              ? { id: assignedWaiter._id, name: assignedWaiter.username }
-              : { id: null },
-          });
-
-          const create = await order.save();
-
-          io.to(restaurantId).emit("get_new_order", create);
-          if (assignedWaiter) {
-            io.to(assignedWaiter._id.toString()).emit(
-              "get_order_update",
-              create
-            );
-          }
-          return socket.emit("order_response", { status: 200, order: create });
-        }
-      } catch (error) {
-        return socket.emit("order_response", {
-          status: 500,
-          message: "Buyurtma yaratishda xatolik yuz berdi",
-          error: error.message,
-        });
-      }
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Client disconnected:", socket.id);
+    connectedRestaurants.set(restaurantId, socket.id);
+    connectedSockets.set(socket.id, {
+      restaurantId: restaurantId,
+      type: "restaurant",
     });
   });
-};
 
-setupSocketHandlers(io);
+  // Restaurant room ga qo'shilish
+  socket.on("join_restaurant", (restaurantId) => {
+    console.log(`🏪 Joining restaurant room: ${restaurantId}`);
+    socket.join(`restaurant_${restaurantId}`);
+    socket.join(restaurantId);
+  });
+
+  // Chef ulanishini qayd qilish
+  socket.on("chef_connected", (userId) => {
+    console.log(`👨‍🍳 Chef ${userId} ulandi`);
+    socket.join(`chef_${userId}`);
+    socket.join(`restaurant_${userId}`);
+
+    connectedSockets.set(socket.id, {
+      userId: userId,
+      type: "chef",
+    });
+  });
+
+  // Waiter ulanishini qayd qilish
+  socket.on("waiter_connected", (data) => {
+    console.log("👨‍💼 Waiter ulandi:", data);
+
+    let waiterId, restaurantId;
+
+    // Data object yoki string bo'lishi mumkin
+    if (typeof data === "object" && data.waiterId) {
+      waiterId = data.waiterId;
+      restaurantId = data.restaurantId;
+    } else if (typeof data === "string") {
+      waiterId = data;
+      // RestaurantId ni boshqa yo'l bilan olishga harakat qilamiz
+    }
+
+    if (waiterId) {
+      connectedWaiters.set(waiterId, socket.id);
+      connectedSockets.set(socket.id, {
+        waiterId: waiterId,
+        restaurantId: restaurantId,
+        type: "waiter",
+      });
+
+      socket.join(`waiter_${waiterId}`);
+      if (restaurantId) {
+        socket.join(`restaurant_${restaurantId}`);
+      }
+
+      console.log(`✅ Waiter ${waiterId} registered with socket ${socket.id}`);
+    }
+  });
+
+  // Notification yuborish - Admin paneldan keladi
+  socket.on("send_notification", (notificationData) => {
+    console.log("🔔 send_notification received:", notificationData);
+
+    const { waiter, restaurantId } = notificationData;
+
+    // Waiter loyihasi uchun formatlanган notification
+    const waiterNotification = {
+      _id: `notification_${Date.now()}`,
+      id: `notification_${Date.now()}`,
+      tableNumber: notificationData.table?.number || 0,
+      table: notificationData.table,
+      customerName: "Mijoz",
+      items:
+        notificationData.meals?.map((meal) => ({
+          dish: {
+            name: meal.foodName,
+            id: meal.foodId,
+            price: meal.foodPrice,
+            image: meal.foodImage,
+          },
+          quantity: meal.quantity,
+          price: meal.foodPrice,
+          name: meal.foodName,
+          foodName: meal.foodName,
+        })) || [],
+      meals: notificationData.meals || [],
+      totalPrice: notificationData.totalPrice || 0,
+      time: new Date().toLocaleTimeString(),
+      createdAt: new Date().toISOString(),
+      status: "pending",
+      waiter: waiter,
+      restaurantId: restaurantId,
+    };
+
+    // Waiterga multiple event nomlari bilan yuborish
+    if (waiter && waiter.id) {
+      const waiterSocketId = connectedWaiters.get(waiter.id);
+      console.log(
+        `📤 Sending to waiter ${waiter.id}, socket: ${waiterSocketId}`
+      );
+
+      if (waiterSocketId) {
+        io.to(waiterSocketId).emit("get_notification", waiterNotification);
+        io.to(waiterSocketId).emit("get_new_order", waiterNotification);
+        io.to(waiterSocketId).emit("notification", waiterNotification);
+        io.to(waiterSocketId).emit("waiter_notification", waiterNotification);
+      }
+
+      // Room orqali ham yuborish
+      io.to(`waiter_${waiter.id}`).emit("get_notification", waiterNotification);
+      io.to(`waiter_${waiter.id}`).emit("get_new_order", waiterNotification);
+    }
+
+    // Restaurant owneriga yuborish
+    if (restaurantId) {
+      io.to(`restaurant_${restaurantId}`).emit(
+        "get_notification",
+        notificationData
+      );
+      io.to(restaurantId).emit("get_notification", waiterNotification);
+    }
+
+    console.log(`✅ Notification processed for waiter ${waiter?.id}`);
+  });
+
+  // Direct notification - waiter loyihasidan kelishi mumkin
+  socket.on("get_notification", (notificationData) => {
+    console.log("🔔 get_notification received:", notificationData);
+
+    const { waiter, restaurantId } = notificationData;
+
+    if (waiter && waiter.id) {
+      const waiterSocketId = connectedWaiters.get(waiter.id);
+      if (waiterSocketId && waiterSocketId !== socket.id) {
+        io.to(waiterSocketId).emit("get_notification", notificationData);
+        io.to(waiterSocketId).emit("notification", notificationData);
+      }
+    }
+
+    if (restaurantId) {
+      io.to(`restaurant_${restaurantId}`).emit(
+        "get_notification",
+        notificationData
+      );
+    }
+  });
+
+  // Order status yangilash
+  socket.on("update_order_status", async (data) => {
+    console.log("🔄 Order status yangilanmoqda:", data);
+
+    try {
+      const { orderId, status, waiterId } = data;
+
+      // Buyurtmani bazadan topish va yangilash
+      const orderModel = require("./src/models/order.model");
+      const updatedOrder = await orderModel.findByIdAndUpdate(
+        orderId,
+        { status },
+        { new: true }
+      );
+
+      if (updatedOrder) {
+        // Barcha restaurant memberlariga yuborish
+        io.to(`restaurant_${updatedOrder.restaurantId}`).emit(
+          "get_order_update",
+          updatedOrder
+        );
+
+        // Waiterga yuborish
+        if (waiterId) {
+          io.to(`waiter_${waiterId}`).emit("get_order_update", updatedOrder);
+        }
+
+        console.log(`✅ Order ${orderId} status updated to ${status}`);
+      }
+    } catch (error) {
+      console.error("❌ Order status yangilashda xatolik:", error);
+    }
+  });
+
+  // Yangi buyurtma yaratilganda
+  socket.on("create_order", async (orderData) => {
+    console.log("📋 Yangi buyurtma yaratilmoqda:", orderData);
+
+    try {
+      const { restaurantId, waiter } = orderData;
+
+      // Agar waiter tayinlangan bo'lsa, faqat unga yuborish
+      if (waiter && waiter.id) {
+        const waiterSocketId = connectedWaiters.get(waiter.id);
+        if (waiterSocketId) {
+          io.to(waiterSocketId).emit("get_new_order", orderData);
+        }
+        io.to(`waiter_${waiter.id}`).emit("get_new_order", orderData);
+      }
+
+      // Restaurant owneriga ham yuborish
+      io.to(`restaurant_${restaurantId}`).emit("get_new_order", orderData);
+    } catch (error) {
+      console.error("❌ Buyurtma yaratishda xatolik:", error);
+    }
+  });
+
+  // Disconnect hodisasi
+  socket.on("disconnect", () => {
+    console.log(`🔌 Socket uzildi: ${socket.id}`);
+
+    const socketInfo = connectedSockets.get(socket.id);
+    if (socketInfo) {
+      if (socketInfo.waiterId) {
+        connectedWaiters.delete(socketInfo.waiterId);
+        console.log(`👨‍💼 Waiter ${socketInfo.waiterId} disconnected`);
+      }
+      if (socketInfo.restaurantId && socketInfo.type === "restaurant") {
+        connectedRestaurants.delete(socketInfo.restaurantId);
+        console.log(`🏪 Restaurant ${socketInfo.restaurantId} disconnected`);
+      }
+    }
+    connectedSockets.delete(socket.id);
+  });
+
+  // Debug info
+  socket.on("get_connected_users", () => {
+    socket.emit("connected_users", {
+      waiters: Array.from(connectedWaiters.keys()),
+      restaurants: Array.from(connectedRestaurants.keys()),
+      totalSockets: connectedSockets.size,
+    });
+  });
+});
+
+// Express middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Swagger UI
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    connectedWaiters: Array.from(connectedWaiters.keys()),
+    connectedRestaurants: Array.from(connectedRestaurants.keys()),
+  });
+});
 
 // API routes
-app.post(
-  "/api/orders/create-order",
-  authMiddleware,
-  orderController.createOrder(io)
-);
 app.use("/api", routes);
-app.get("/", (req, res) => {
-  res.json({ msg: "Hello" });
-});
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res
-    .status(500)
-    .json({ error: "Internal Server Error", details: err.message });
-});
+app.use(errorMiddleware);
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: "Not Found" });
-});
+// Socket.IO ni global qilish (controllerlar uchun)
+global.io = io;
+module.exports = { io };
+
+// Database connection
+connectDB();
 
 const PORT = process.env.PORT || 1234;
-httpServer.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+
+server.listen(PORT, () => {
+  logger.info(`🚀 Server ${PORT} portda ishga tushdi`);
+  console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
+  console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
 });
 
-process.on("SIGTERM", () => {
-  console.info("SIGTERM signal received.");
-  httpServer.close(() => {
-    console.log("Server closed");
-    process.exit(0);
+// Unhandled promise rejection
+process.on("unhandledRejection", (err, promise) => {
+  logger.error("Unhandled Promise Rejection:", err);
+  server.close(() => {
+    process.exit(1);
   });
+});
+
+// Uncaught exception
+process.on("uncaughtException", (err) => {
+  logger.error("Uncaught Exception:", err);
+  process.exit(1);
 });
